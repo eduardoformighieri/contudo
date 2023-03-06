@@ -15,7 +15,6 @@ export class AuthController {
   @ApiOperation({ summary: 'Login Admin' })
   @ApiBody({ type: LoginDto })
   async login(@Request() req) {
-    console.log(req.user);
     return this.authService.login(req.user);
   }
 
@@ -24,7 +23,6 @@ export class AuthController {
   @ApiOperation({ summary: 'Get information about the logged Admin' })
   @ApiBearerAuth()
   getProfile(@Request() req) {
-    console.log(req.user);
     return req.user;
   }
 }
