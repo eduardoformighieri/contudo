@@ -16,7 +16,7 @@ import { CreateAdminDto } from './dto/inputs/create-admin.dto';
 import { UpdateAdminDto } from './dto/inputs/update-admin.dto';
 import { AdminWithRoleDto } from './dto/outputs/admin-with-role.dto';
 
-@ApiTags('admins')
+@ApiTags('Admins')
 @Controller('admins')
 export class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}

@@ -1,25 +1,27 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { AdminsService } from '../admins/admins.service';
 import { JwtService } from '@nestjs/jwt';
-import { ValidateAdminDto } from './dto/validate-admin.dto';
-import { Admin, Prisma } from '@prisma/client';
+import { Admin, AdminRole, Prisma } from '@prisma/client';
+import { LoginDto } from './dto/inputs/login.dto';
 
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma.service';
+import { JwtPayloadDto } from './dto/outputs/jwt-payload.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly adminsService: AdminsService,
     private readonly jwtService: JwtService,
     private prisma: PrismaService,
   ) {}
 
   async findOne(
     postWhereUniqueInput: Prisma.AdminWhereUniqueInput,
-  ): Promise<Admin> {
+  ): Promise<Admin & { role: AdminRole }> {
     const admin = await this.prisma.admin.findUnique({
       where: postWhereUniqueInput,
+      include: {
+        role: true,
+      },
     });
 
     if (!admin) {
@@ -29,17 +31,21 @@ export class AuthService {
     return admin;
   }
 
-  async validateAdmin({ email, password }: ValidateAdminDto): Promise<any> {
+  async validateAdmin({ email, password }: LoginDto): Promise<JwtPayloadDto> {
     const admin = await this.findOne({ email });
     if (admin && (await bcrypt.compare(password, admin.password))) {
-      const { password, ...result } = admin;
-      return result;
+      return new JwtPayloadDto(admin);
     }
     return null;
   }
 
-  async login(admin: Admin): Promise<{ access_token: string }> {
-    const payload = { email: admin.email, sub: admin.id };
+  async login({
+    id,
+    name,
+    email,
+    role,
+  }: JwtPayloadDto): Promise<{ access_token: string }> {
+    const payload = { name, email, role, sub: id };
     return {
       access_token: this.jwtService.sign(payload),
     };
