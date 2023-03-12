@@ -18,6 +18,7 @@ import {
   IsString,
   IsDate,
   IsOptional,
+  ArrayMinSize,
 } from 'class-validator';
 
 export class ReportForAdminDto {
@@ -61,6 +62,8 @@ export class ReportForAdminDto {
     example: ["http//aws/image/2737sj379s', 'http//aws/audio/2737sj379s"],
   })
   /* eslint-enable */
+  @IsOptional()
+  @ArrayMinSize(1)
   @IsString({ each: true })
   readonly attachments: string[];
 

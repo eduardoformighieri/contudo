@@ -8,7 +8,14 @@ import {
   ReportMessage,
   ReportStatus,
 } from '@prisma/client';
-import { IsEmail, IsNotEmpty, IsString, IsDate } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  IsDate,
+  ArrayMinSize,
+  IsOptional,
+} from 'class-validator';
 
 export class ReportForGuestDto {
   @ApiProperty({
@@ -44,6 +51,8 @@ export class ReportForGuestDto {
     example: ["http//aws/image/2737sj379s', 'http//aws/audio/2737sj379s"],
   })
   /* eslint-enable */
+  @IsOptional()
+  @ArrayMinSize(1)
   @IsString({ each: true })
   readonly attachments: string[];
 

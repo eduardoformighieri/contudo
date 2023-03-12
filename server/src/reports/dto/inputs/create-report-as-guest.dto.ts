@@ -6,6 +6,7 @@ import {
   IsString,
   isArray,
   IsOptional,
+  ArrayMinSize,
 } from 'class-validator';
 
 export class CreateReportAsGuestDto {
@@ -36,7 +37,7 @@ export class CreateReportAsGuestDto {
   })
   /* eslint-enable */
   @IsOptional()
-  @IsNotEmpty()
+  @ArrayMinSize(1)
   @IsString({ each: true })
   readonly attachmentUrls: string[];
 }
