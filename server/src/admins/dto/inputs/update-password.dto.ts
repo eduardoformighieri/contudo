@@ -3,9 +3,9 @@ import { IsString } from 'class-validator';
 export class UpdatePasswordDto {
   @IsString()
   @ApiProperty({ example: '123456789' })
-  readonly oldPassword: string;
+  readonly old_password: string;
 
   @IsString()
   @ApiProperty({ example: '987654321' })
-  readonly newPassword: string;
+  readonly new_password: string;
 }

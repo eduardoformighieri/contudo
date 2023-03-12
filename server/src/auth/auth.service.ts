@@ -1,11 +1,16 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Admin, AdminRole, Prisma } from '@prisma/client';
 import { LoginDto } from './dto/inputs/login.dto';
 
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { PrismaService } from 'src/prisma.service';
 import { JwtPayloadDto } from './dto/outputs/jwt-payload.dto';
+import { UpdatePasswordDto } from './dto/inputs/update-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -49,5 +54,25 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  async updatePassword(params: {
+    where: Prisma.AdminWhereUniqueInput;
+    data: UpdatePasswordDto;
+  }): Promise<void> {
+    const { data, where } = params;
+    const { oldPassword, newPassword } = data;
+    const admin = await this.prisma.admin.findUnique({
+      where,
+    });
+    const passwordsMatch = await bcrypt.compare(oldPassword, admin.password);
+
+    if (!passwordsMatch) throw new UnauthorizedException('Invalid credentials');
+
+    const newPasswordHash = await bcrypt.hash(newPassword, 10);
+    await this.prisma.admin.update({
+      data: { password: newPasswordHash },
+      where,
+    });
   }
 }

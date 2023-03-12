@@ -7,9 +7,10 @@ import { PrismaService } from 'src/prisma.service';
 import { Admin, Prisma } from '@prisma/client';
 import { Paginated } from 'src/common/interfaces/paginated.interface';
 import { CreateAdminDto } from './dto/inputs/create-admin.dto';
-import * as bcrypt from 'bcrypt';
 import { UpdateAdminDto } from './dto/inputs/update-admin.dto';
 import { AdminWithRoleDto } from './dto/outputs/admin-with-role.dto';
+import * as bcrypt from 'bcryptjs';
+import { EncryptionService } from 'src/common/services/encryption.service';
 
 //  orderBy?: Prisma.AdminOrderByWithRelationInput;
 
@@ -17,11 +18,9 @@ import { AdminWithRoleDto } from './dto/outputs/admin-with-role.dto';
 export class AdminsService {
   constructor(private prisma: PrismaService) {}
 
-  async findOne(
-    postWhereUniqueInput: Prisma.AdminWhereUniqueInput,
-  ): Promise<AdminWithRoleDto> {
+  async findOne(where: { id: string }): Promise<AdminWithRoleDto> {
     const admin = await this.prisma.admin.findUnique({
-      where: postWhereUniqueInput,
+      where,
       include: {
         role: true,
       },
@@ -34,15 +33,15 @@ export class AdminsService {
     return new AdminWithRoleDto(admin);
   }
 
-  async findAll({
-    page = 1,
-    limit = 10,
-  }: {
+  async findAll(params: {
     page?: number;
     limit?: number;
   }): Promise<Paginated<AdminWithRoleDto[]>> {
-    const skip = (page - 1) * limit;
-    const take = limit;
+    let { page, limit } = params;
+
+    page = page ? page : 1;
+    const take = limit ? limit : 10;
+    const skip = page ? (page - 1) * take : 0;
 
     const admins = await this.prisma.admin.findMany({
       skip,
@@ -52,7 +51,9 @@ export class AdminsService {
       },
     });
 
-    const adminDtos = admins.map((admin) => new AdminWithRoleDto(admin));
+    const adminWithRoleDtos = admins.map(
+      (admin) => new AdminWithRoleDto(admin),
+    );
 
     const total = await this.prisma.admin.count();
 
@@ -60,16 +61,13 @@ export class AdminsService {
       page,
       count: admins.length,
       total,
-      payload: adminDtos,
+      payload: adminWithRoleDtos,
     };
   }
 
-  async create({
-    email,
-    name,
-    password,
-    role,
-  }: CreateAdminDto): Promise<AdminWithRoleDto> {
+  async create(createAdminDto: CreateAdminDto): Promise<AdminWithRoleDto> {
+    const { email, name, password, role } = createAdminDto;
+
     const existingAdmin = await this.prisma.admin.findUnique({
       where: { email },
     });
@@ -106,6 +104,16 @@ export class AdminsService {
     data: UpdateAdminDto;
   }): Promise<AdminWithRoleDto> {
     const { data, where } = params;
+
+    if (!!data.email) {
+      const existingAdmin = await this.prisma.admin.findUnique({
+        where: { email: data.email },
+      });
+      if (existingAdmin) {
+        throw new BadRequestException('Email already in use');
+      }
+    }
+
     const admin = await this.prisma.admin.update({
       data,
       where,
@@ -116,20 +124,13 @@ export class AdminsService {
     return new AdminWithRoleDto(admin);
   }
 
-  async updatePassword(params: {
-    where: Prisma.AdminWhereUniqueInput;
-    data: Prisma.AdminUpdateInput;
-  }): Promise<Admin> {
-    const { data, where } = params;
-    return this.prisma.admin.update({
-      data,
+  async delete(where: Prisma.AdminWhereUniqueInput): Promise<AdminWithRoleDto> {
+    const admin = await this.prisma.admin.delete({
       where,
+      include: {
+        role: true,
+      },
     });
-  }
-
-  async delete(where: Prisma.AdminWhereUniqueInput): Promise<Admin> {
-    return this.prisma.admin.delete({
-      where,
-    });
+    return new AdminWithRoleDto(admin);
   }
 }

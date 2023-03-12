@@ -24,7 +24,7 @@ export class CreateAdminDto {
   readonly password: string;
 
   @ApiProperty({
-    example: 'co-leader',
+    example: 'Co-leader',
   })
   @IsNotEmpty()
   @IsString()
