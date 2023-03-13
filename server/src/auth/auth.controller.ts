@@ -8,13 +8,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { AdminWithRoleDto } from 'src/admins/dto/outputs/admin-with-role.dto';
 import { Public } from 'src/common/decorators/public.decorator';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/inputs/login.dto';
 import { UpdatePasswordDto } from './dto/inputs/update-password.dto';
-import { JwtPayloadDto } from './dto/outputs/jwt-payload.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { JwtPayload } from './interfaces/jwt-payload.interface';
 
 @ApiTags('Admins Authentication')
 @Controller('auth')
@@ -39,7 +38,7 @@ export class AuthController {
   @Patch('updatePassword')
   @ApiOperation({ summary: 'Update password' })
   async updatePassword(
-    @Request() req: { user: JwtPayloadDto },
+    @Request() req: { user: AdminWithRoleDto },
     @Body() updatePasswordDto: UpdatePasswordDto,
   ) {
     this.authService.updatePassword({

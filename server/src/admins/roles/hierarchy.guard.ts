@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { JwtPayloadDto } from 'src/auth/dto/outputs/jwt-payload.dto';
 import { AdminsService } from '../admins.service';
+import { AdminWithRoleDto } from '../dto/outputs/admin-with-role.dto';
 
 const rolesHierarchy = {
   Leader: 4,
@@ -16,7 +16,7 @@ export class HierarchyGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
 
-    const { user }: { user: JwtPayloadDto } = request;
+    const { user }: { user: AdminWithRoleDto } = request;
     const { id } = request?.params;
     const affectedAdmin = await this.adminsService.findOne({ id });
 

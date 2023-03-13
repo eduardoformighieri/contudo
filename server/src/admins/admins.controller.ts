@@ -1,29 +1,26 @@
 import {
+  Body,
   Controller,
+  Delete,
   Get,
   Param,
-  Post,
-  Body,
   Patch,
-  Delete,
-  UseGuards,
-  Request,
+  Post,
   Query,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { AdminsService } from './admins.service';
 
-import { Admin, Prisma } from '@prisma/client';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Paginated } from 'src/common/interfaces/paginated.interface';
 import { CreateAdminDto } from './dto/inputs/create-admin.dto';
 import { UpdateAdminDto } from './dto/inputs/update-admin.dto';
 import { AdminWithRoleDto } from './dto/outputs/admin-with-role.dto';
 import { HierarchyGuard } from './roles/hierarchy.guard';
-import { RolesGuard } from './roles/roles.guard';
-import { Role } from './roles/roles.enum';
 import { Roles } from './roles/roles.decorator';
-import { UpdateSelfGuard } from 'src/common/guards/update-self.guard';
-import { JwtPayloadDto } from 'src/auth/dto/outputs/jwt-payload.dto';
+import { Role } from './roles/roles.enum';
+import { RolesGuard } from './roles/roles.guard';
 
 @ApiTags('Admins')
 @Controller('admins')
@@ -78,7 +75,7 @@ export class AdminsController {
   @Patch('/me')
   @ApiOperation({ summary: 'Update self Admin data' })
   async updateSelfAdmin(
-    @Request() req: { user: JwtPayloadDto },
+    @Request() req: { user: AdminWithRoleDto },
     @Body() updateAdminDto: UpdateAdminDto,
   ): Promise<AdminWithRoleDto> {
     return this.adminsService.update({

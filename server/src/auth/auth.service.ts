@@ -9,8 +9,8 @@ import { LoginDto } from './dto/inputs/login.dto';
 
 import * as bcrypt from 'bcryptjs';
 import { PrismaService } from 'src/prisma.service';
-import { JwtPayloadDto } from './dto/outputs/jwt-payload.dto';
 import { UpdatePasswordDto } from './dto/inputs/update-password.dto';
+import { AdminWithRoleDto } from 'src/admins/dto/outputs/admin-with-role.dto';
 
 @Injectable()
 export class AuthService {
@@ -36,10 +36,13 @@ export class AuthService {
     return admin;
   }
 
-  async validateAdmin({ email, password }: LoginDto): Promise<JwtPayloadDto> {
+  async validateAdmin({
+    email,
+    password,
+  }: LoginDto): Promise<AdminWithRoleDto> {
     const admin = await this.findOne({ email });
     if (admin && (await bcrypt.compare(password, admin.password))) {
-      return new JwtPayloadDto(admin);
+      return new AdminWithRoleDto(admin);
     }
     return null;
   }
@@ -49,7 +52,7 @@ export class AuthService {
     name,
     email,
     role,
-  }: JwtPayloadDto): Promise<{ access_token: string }> {
+  }: AdminWithRoleDto): Promise<{ access_token: string }> {
     const payload = { name, email, role, sub: id };
     return {
       access_token: this.jwtService.sign(payload),

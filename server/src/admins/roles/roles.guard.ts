@@ -1,6 +1,6 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { JwtPayloadDto } from 'src/auth/dto/outputs/jwt-payload.dto';
+import { AdminWithRoleDto } from '../dto/outputs/admin-with-role.dto';
 import { ROLES_KEY } from './roles.decorator';
 import { Role } from './roles.enum';
 
@@ -14,7 +14,7 @@ export class RolesGuard implements CanActivate {
       context.getClass(),
     ]);
 
-    const { user }: { user: JwtPayloadDto } = context
+    const { user }: { user: AdminWithRoleDto } = context
       .switchToHttp()
       .getRequest();
     return requiredRoles.some((role) => user.role?.includes(role));
