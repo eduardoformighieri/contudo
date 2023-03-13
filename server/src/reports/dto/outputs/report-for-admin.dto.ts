@@ -51,6 +51,13 @@ export class ReportForAdminDto {
   readonly category: string;
 
   @ApiProperty({
+    example: 'Stephen behavior',
+  })
+  @IsNotEmpty()
+  @IsString()
+  readonly title: string;
+
+  @ApiProperty({
     example: 'I saw Stephen doing some weird...',
   })
   @IsNotEmpty()
@@ -148,6 +155,7 @@ export class ReportForAdminDto {
     },
   ) {
     const {
+      title,
       attachments,
       messages,
       category,
@@ -168,6 +176,7 @@ export class ReportForAdminDto {
     this.category = category?.name;
     this.source = source?.name;
     this.status = status?.name;
+    this.title = title;
     this.description = description;
     this.created_at = created_at;
     this.updated_at = updated_at;

@@ -40,6 +40,13 @@ export class ReportForGuestDto {
   readonly category: string;
 
   @ApiProperty({
+    example: 'Stephen behavior',
+  })
+  @IsNotEmpty()
+  @IsString()
+  readonly title: string;
+
+  @ApiProperty({
     example: 'I saw Stephen doing some weird...',
   })
   @IsNotEmpty()
@@ -92,6 +99,7 @@ export class ReportForGuestDto {
     },
   ) {
     const {
+      title,
       attachments,
       messages,
       category,
@@ -102,6 +110,7 @@ export class ReportForGuestDto {
       guest_identity,
     } = report;
     this.guest_identity = guest_identity;
+    this.title = title;
     this.description = description;
     this.category = category?.name;
     this.status = status?.name;

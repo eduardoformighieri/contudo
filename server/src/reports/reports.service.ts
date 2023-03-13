@@ -28,6 +28,7 @@ export class ReportsService {
     const skip = page ? (page - 1) * take : 0;
 
     const reports = await this.prisma.report.findMany({
+      orderBy: {},
       skip,
       take,
       include: {
@@ -43,7 +44,7 @@ export class ReportsService {
       },
     });
 
-    const reportWithRoleDtos = reports.map(
+    const reportForAdminDtos = reports.map(
       (report) =>
         new ReportForAdminDto({
           ...report,
@@ -60,7 +61,7 @@ export class ReportsService {
       page,
       count: reports.length,
       total,
-      payload: reportWithRoleDtos,
+      payload: reportForAdminDtos,
     };
   }
 
@@ -99,6 +100,7 @@ export class ReportsService {
     createReportAsAdminDto: CreateReportAsAdminDto,
   ): Promise<ReportForAdminDto> {
     const {
+      title,
       attachmentUrls,
       categoryId,
       description,
@@ -109,6 +111,7 @@ export class ReportsService {
 
     const report = await this.prisma.report.create({
       data: {
+        title,
         description: this.encryptionService.encrypt(description),
         created_at: reportDate,
         category: { connect: { id: categoryId } },
@@ -164,13 +167,14 @@ export class ReportsService {
   async createAsGuest(
     createReportAsGuestDto: CreateReportAsGuestDto,
   ): Promise<{ secretReportKey: string }> {
-    const { attachmentUrls, categoryId, description, guest_identity } =
+    const { attachmentUrls, categoryId, description, guest_identity, title } =
       createReportAsGuestDto;
 
     const secretKey = this.encryptionService.generateRandomSecretKey();
 
     await this.prisma.report.create({
       data: {
+        title,
         description: this.encryptionService.encrypt(description),
         guest_identity: this.encryptionService.encrypt(guest_identity),
         secret_key: secretKey,

@@ -25,6 +25,13 @@ export class CreateReportAsGuestDto {
   readonly categoryId: string;
 
   @ApiProperty({
+    example: 'Stephen behavior',
+  })
+  @IsNotEmpty()
+  @IsString()
+  readonly title: string;
+
+  @ApiProperty({
     example: 'I saw Stephen doing some weird...',
   })
   @IsNotEmpty()
