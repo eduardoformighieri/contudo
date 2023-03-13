@@ -83,12 +83,7 @@ export class AdminsService {
         name,
         password: hashPassword,
         role: {
-          connectOrCreate: {
-            where: { name: role },
-            create: {
-              name: role,
-            },
-          },
+          connect: { name: role },
         },
       },
       include: {

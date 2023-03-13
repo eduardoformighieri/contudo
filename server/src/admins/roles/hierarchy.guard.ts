@@ -1,28 +1,31 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma.service';
 import { AdminsService } from '../admins.service';
 import { AdminWithRoleDto } from '../dto/outputs/admin-with-role.dto';
 
-const rolesHierarchy = {
-  Leader: 4,
-  'Co-leader': 3,
-  Elder: 2,
-  Member: 1,
-};
-
 @Injectable()
 export class HierarchyGuard implements CanActivate {
-  constructor(private adminsService: AdminsService) {}
+  constructor(private prisma: PrismaService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
 
     const { user }: { user: AdminWithRoleDto } = request;
     const { id } = request?.params;
-    const affectedAdmin = await this.adminsService.findOne({ id });
+    const { power_level: affectingAdminPowerLevel } =
+      await this.prisma.adminRole.findFirst({
+        where: { name: user.role },
+      });
+    const affectedAdmin = await this.prisma.admin.findFirst({ where: { id } });
+    const { power_level: affectedAdminPowerLevel } =
+      await this.prisma.adminRole.findFirst({
+        where: { id: affectedAdmin.role_id },
+      });
 
-    if (rolesHierarchy[user.role] <= rolesHierarchy[affectedAdmin.role]) {
+    if (affectingAdminPowerLevel <= affectedAdminPowerLevel) {
       return false;
     }
     return true;
   }
 }
+5;
