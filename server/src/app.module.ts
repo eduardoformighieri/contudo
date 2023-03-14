@@ -5,6 +5,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { AdminsModule } from './admins/admins.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { ReportTagsModule } from './report-tags/report-tags.module';
 import { ReportsModule } from './reports/reports.module';
 
 @Module({
@@ -14,6 +15,12 @@ import { ReportsModule } from './reports/reports.module';
       useClass: JwtAuthGuard,
     },
   ],
-  imports: [ConfigModule.forRoot(), AdminsModule, AuthModule, ReportsModule],
+  imports: [
+    ConfigModule.forRoot(),
+    AdminsModule,
+    AuthModule,
+    ReportsModule,
+    ReportTagsModule,
+  ],
 })
 export class AppModule {}
