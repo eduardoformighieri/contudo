@@ -38,11 +38,11 @@ export class CreateReportAsAdminDto {
   @IsString()
   readonly description: string;
 
-  /* eslint-disable */
+  // prettier-ignore
   @ApiProperty({
-    example: ["http//aws/image/2737sj379s', 'http//aws/audio/2737sj379s"],
+    example: ["http//aws/image/2737sj379s", "http//aws/audio/2737sj379s"],
   })
-  /* eslint-enable */
+// prettier-ignore
   @IsOptional()
   @ArrayMinSize(1)
   @IsString({ each: true })

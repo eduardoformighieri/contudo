@@ -45,7 +45,7 @@ export class AdminsController {
     @Query('page') page?: number,
     @Query('limit') limit?: number,
   ): Promise<Paginated<AdminWithRoleDto[]>> {
-    return this.adminsService.findAll({ page, limit });
+    return this.adminsService.findAll({ _page: page, limit });
   }
 
   @Post()

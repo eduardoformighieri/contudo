@@ -64,11 +64,11 @@ export class ReportForAdminDto {
   @IsString()
   readonly description: string;
 
-  /* eslint-disable */
+  // prettier-ignore
   @ApiProperty({
-    example: ["http//aws/image/2737sj379s', 'http//aws/audio/2737sj379s"],
+    example: ["http//aws/image/2737sj379s", "http//aws/audio/2737sj379s"],
   })
-  /* eslint-enable */
+// prettier-ignore
   @IsOptional()
   @ArrayMinSize(1)
   @IsString({ each: true })
@@ -183,7 +183,7 @@ export class ReportForAdminDto {
     this.attachments = attachments.map((attachment) => attachment.url);
     this.due_date = due_date;
     this.tags = tags;
-    this.priority = priority?.name;
+    this.priority = priority?.name || null;
     this.guest_identity = guest_identity;
     this.assigned_admins = assigned_admins;
     this.messages = messages;

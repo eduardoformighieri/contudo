@@ -7,6 +7,9 @@ import { CreateReportAsAdminDto } from './dto/inputs/create-report-as-admin.dto'
 import { CreateReportAsGuestDto } from './dto/inputs/create-report-as-guest.dto';
 import { EncryptionService } from 'src/common/services/encryption.service';
 import { Paginated } from 'src/common/interfaces/paginated.interface';
+import { pagination } from 'src/common/utils/pagination';
+import { OrderDirection } from 'src/common/enums/order-direction.enum';
+import { ReportOrderBy } from './enums/report-order-by.enum';
 
 //  orderBy?: Prisma.ReportOrderByWithRelationInput;
 
@@ -18,17 +21,30 @@ export class ReportsService {
   ) {}
 
   async findAll(params: {
-    page?: number;
+    orderBy?: ReportOrderBy;
+    orderDirection?: OrderDirection;
+    _page?: number;
     limit?: number;
   }): Promise<Paginated<ReportForAdminDto[]>> {
-    let { page, limit } = params;
+    const { _page, orderBy, orderDirection, limit } = params;
+    const { page, take, skip } = pagination(_page, limit);
 
-    page = page ? page : 1;
-    const take = limit ? limit : 10;
-    const skip = page ? (page - 1) * take : 0;
+    let prismaOrderBy = null;
+
+    if (!!orderBy && !!orderDirection) {
+      if (orderBy === 'priority_level') {
+        prismaOrderBy = {
+          priority: {
+            priority_level: orderDirection,
+          },
+        };
+      } else {
+        prismaOrderBy = { [orderBy]: orderDirection };
+      }
+    }
 
     const reports = await this.prisma.report.findMany({
-      orderBy: {},
+      orderBy: prismaOrderBy || { updated_at: 'desc' },
       skip,
       take,
       include: {
@@ -49,9 +65,6 @@ export class ReportsService {
         new ReportForAdminDto({
           ...report,
           description: this.encryptionService.decrypt(report.description),
-          guest_identity: !!report.guest_identity
-            ? this.encryptionService.decrypt(report.guest_identity)
-            : null,
         }),
     );
 
@@ -90,9 +103,6 @@ export class ReportsService {
     return new ReportForAdminDto({
       ...report,
       description: this.encryptionService.decrypt(report.description),
-      guest_identity: !!report.guest_identity
-        ? this.encryptionService.decrypt(report.guest_identity)
-        : null,
     });
   }
 
@@ -137,7 +147,10 @@ export class ReportsService {
       },
     });
 
-    return new ReportForAdminDto(report);
+    return new ReportForAdminDto({
+      ...report,
+      description: this.encryptionService.decrypt(report.description),
+    });
   }
 
   async findBySecretKey(secretKey: string): Promise<ReportForGuestDto> {
@@ -176,7 +189,7 @@ export class ReportsService {
       data: {
         title,
         description: this.encryptionService.encrypt(description),
-        guest_identity: this.encryptionService.encrypt(guest_identity),
+        guest_identity,
         secret_key: secretKey,
         category: { connect: { id: categoryId } },
         source: {

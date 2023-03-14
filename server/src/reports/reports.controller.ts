@@ -18,6 +18,8 @@ import { ReportForGuestDto } from './dto/outputs/report-for-guest.dto';
 import { ReportForAdminDto } from './dto/outputs/report-for-admin.dto';
 import { CreateReportAsAdminDto } from './dto/inputs/create-report-as-admin.dto';
 import { CreateReportAsGuestDto } from './dto/inputs/create-report-as-guest.dto';
+import { OrderDirection } from 'src/common/enums/order-direction.enum';
+import { ReportOrderBy } from './enums/report-order-by.enum';
 
 @ApiTags('Reports')
 @Controller('reports')
@@ -28,11 +30,20 @@ export class ReportsController {
   @ApiOperation({ summary: 'Find all Reports' })
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiQuery({ name: 'orderBy', enum: ReportOrderBy, required: false })
+  @ApiQuery({ name: 'orderDirection', enum: OrderDirection, required: false })
   async getAllReports(
+    @Query('orderBy') orderBy?: ReportOrderBy,
+    @Query('orderDirection') orderDirection?: OrderDirection,
     @Query('page') page?: number,
     @Query('limit') limit?: number,
   ): Promise<Paginated<ReportForAdminDto[]>> {
-    return this.reportsService.findAll({ page, limit });
+    return this.reportsService.findAll({
+      _page: page,
+      limit,
+      orderBy,
+      orderDirection,
+    });
   }
 
   @Get(':id')

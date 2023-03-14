@@ -11,6 +11,7 @@ import { UpdateAdminDto } from './dto/inputs/update-admin.dto';
 import { AdminWithRoleDto } from './dto/outputs/admin-with-role.dto';
 import * as bcrypt from 'bcryptjs';
 import { EncryptionService } from 'src/common/services/encryption.service';
+import { pagination } from 'src/common/utils/pagination';
 
 //  orderBy?: Prisma.AdminOrderByWithRelationInput;
 
@@ -34,14 +35,12 @@ export class AdminsService {
   }
 
   async findAll(params: {
-    page?: number;
+    _page?: number;
     limit?: number;
   }): Promise<Paginated<AdminWithRoleDto[]>> {
-    let { page, limit } = params;
+    let { _page, limit } = params;
 
-    page = page ? page : 1;
-    const take = limit ? limit : 10;
-    const skip = page ? (page - 1) * take : 0;
+    const { page, take, skip } = pagination(_page, limit);
 
     const admins = await this.prisma.admin.findMany({
       skip,
