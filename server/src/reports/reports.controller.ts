@@ -20,6 +20,7 @@ import { CreateReportAsAdminDto } from './dto/inputs/create-report-as-admin.dto'
 import { CreateReportAsGuestDto } from './dto/inputs/create-report-as-guest.dto';
 import { OrderDirection } from 'src/common/enums/order-direction.enum';
 import { ReportOrderBy } from './enums/report-order-by.enum';
+import { AddTagToReportDto } from './dto/inputs/add-tag-to-report.dto';
 
 @ApiTags('Reports')
 @Controller('reports')
@@ -82,12 +83,16 @@ export class ReportsController {
   }
 
   @Post(':id')
-  @ApiOperation({ summary: 'Add tags to report' })
-  async addTags(
+  @ApiOperation({ summary: 'Add tag to report' })
+  async addTag(
     @Request() req,
-    @Param('id') id: string,
-    @Body() tagNames: string[],
+    @Param('id') reportId: string,
+    @Body() addTagToReportDto: AddTagToReportDto,
   ): Promise<ReportForAdminDto> {
-    return this.reportsService.addTags(req.user, id, tagNames);
+    return this.reportsService.addTag(
+      req.user,
+      reportId,
+      addTagToReportDto.tagName,
+    );
   }
 }

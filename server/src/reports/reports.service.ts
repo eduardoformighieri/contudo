@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { ReportForAdminDto } from './dto/outputs/report-for-admin.dto';
 import { ReportForGuestDto } from './dto/outputs/report-for-guest.dto';
@@ -10,7 +14,6 @@ import { Paginated } from 'src/common/interfaces/paginated.interface';
 import { pagination } from 'src/common/utils/pagination';
 import { OrderDirection } from 'src/common/enums/order-direction.enum';
 import { ReportOrderBy } from './enums/report-order-by.enum';
-import { ReportActivityLogsService } from 'src/report-activity-logs/report-activity-logs.service';
 import { AdminWithRoleDto } from 'src/admins/dto/outputs/admin-with-role.dto';
 import { Prisma } from '@prisma/client';
 
@@ -21,7 +24,6 @@ export class ReportsService {
   constructor(
     private prisma: PrismaService,
     private encryptionService: EncryptionService,
-    private reportActivityLogsService: ReportActivityLogsService,
   ) {}
 
   async findAll(params: {
@@ -138,6 +140,12 @@ export class ReportsService {
             url,
           })),
         },
+        activity_logs: {
+          create: {
+            log: `${adminData.name} created this report`,
+            admin: { connect: { id: adminData.id } },
+          },
+        },
       },
 
       include: {
@@ -151,13 +159,6 @@ export class ReportsService {
         tags: true,
         status: true,
       },
-    });
-
-    await this.reportActivityLogsService.create({
-      log: `${adminData.name} created this report`,
-      reportId: report.id,
-      adminId: adminData.id,
-      created_at: report.updated_at,
     });
 
     return new ReportForAdminDto({
@@ -243,10 +244,10 @@ export class ReportsService {
     return { secretReportKey: secretKey };
   }
 
-  async addTags(
+  async addTag(
     adminData: AdminWithRoleDto,
     reportId: string,
-    tagNames: string[],
+    tagName: string,
   ): Promise<any> {
     const report = await this.prisma.report.findUnique({
       where: { id: reportId },
@@ -257,19 +258,33 @@ export class ReportsService {
       throw new NotFoundException('Report not found');
     }
 
-    const tagsToAdd = tagNames.filter(
-      (tagName) => !report.tags.some((tag) => tag.name === tagName),
-    );
+    const tag = await this.prisma.reportTag.findUnique({
+      where: { name: tagName },
+    });
 
-    if (tagsToAdd.length === 0) {
-      return report;
+    if (!tag) {
+      throw new NotFoundException('Tag not found');
+    }
+
+    const tagAlreadyAdded = report.tags.some((tag) => tag.name === tagName);
+
+    if (tagAlreadyAdded) {
+      throw new BadRequestException('Tag already added to this report');
     }
 
     const updatedReport = await this.prisma.report.update({
       where: { id: reportId },
       data: {
         tags: {
-          connect: tagsToAdd.map((tagName) => ({ name: tagName })),
+          connect: {
+            name: tagName,
+          },
+        },
+        activity_logs: {
+          create: {
+            log: `${adminData.name} added ${tagName} tag to this report`,
+            admin: { connect: { id: adminData.id } },
+          },
         },
       },
       include: {
@@ -283,15 +298,6 @@ export class ReportsService {
         tags: true,
         status: true,
       },
-    });
-
-    const tagString = tagsToAdd.map((tagName) => tagName).join(', ');
-
-    await this.reportActivityLogsService.create({
-      log: `${adminData.name} added (${tagString}) tag(s) to this report`,
-      reportId,
-      adminId: adminData.id,
-      created_at: updatedReport.updated_at,
     });
 
     return new ReportForAdminDto({
