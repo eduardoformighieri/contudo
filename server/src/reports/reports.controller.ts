@@ -21,6 +21,7 @@ import { CreateReportAsGuestDto } from './dto/inputs/create-report-as-guest.dto'
 import { OrderDirection } from 'src/common/enums/order-direction.enum';
 import { ReportOrderBy } from './enums/report-order-by.enum';
 import { AddTagToReportDto } from './dto/inputs/add-tag-to-report.dto';
+import { RemoveTagFromReportDto } from './dto/inputs/remove-tag-from-report.dto';
 
 @ApiTags('Reports')
 @Controller('reports')
@@ -93,6 +94,20 @@ export class ReportsController {
       req.user,
       reportId,
       addTagToReportDto.tagName,
+    );
+  }
+
+  @Post('remove/:id')
+  @ApiOperation({ summary: 'Remove tag from report' })
+  async removeTag(
+    @Request() req,
+    @Param('id') reportId: string,
+    @Body() removeTagFromReportDto: RemoveTagFromReportDto,
+  ): Promise<ReportForAdminDto> {
+    return this.reportsService.removeTag(
+      req.user,
+      reportId,
+      removeTagFromReportDto.tagName,
     );
   }
 }

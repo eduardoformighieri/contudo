@@ -33,24 +33,6 @@ export class ReportTagsController {
     return await this.reportTagsService.findAll();
   }
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Find Report Tag by id' })
-  async findTag(@Param('id') id: string): Promise<ReportTag> {
-    return await this.reportTagsService.findTag({ id });
-  }
-
-  @Patch(':id')
-  @ApiOperation({ summary: 'Update Report Tag by id' })
-  async updateTag(
-    @Param('id') id: string,
-    @Body() updateReportTagDto: UpdateReportTagDto,
-  ): Promise<ReportTag> {
-    return await this.reportTagsService.updateTag({
-      where: { id },
-      data: updateReportTagDto,
-    });
-  }
-
   @Delete(':id')
   @ApiOperation({ summary: 'Delete Report Tag by id' })
   async deleteTag(@Param('id') id: string): Promise<ReportTag> {

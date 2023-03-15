@@ -20,7 +20,7 @@ import {
   IsOptional,
   ArrayMinSize,
 } from 'class-validator';
-import { ReportActivityLogDto } from 'src/report-activity-logs/dto/outputs/report-activity-log.dto';
+import { ReportActivityLogDto } from './report-activity-log.dto';
 
 export class ReportForAdminDto {
   @ApiProperty({

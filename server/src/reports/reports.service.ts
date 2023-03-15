@@ -305,4 +305,66 @@ export class ReportsService {
       description: this.encryptionService.decrypt(updatedReport.description),
     });
   }
+
+  async removeTag(
+    adminData: AdminWithRoleDto,
+    reportId: string,
+    tagName: string,
+  ): Promise<ReportForAdminDto> {
+    const report = await this.prisma.report.findUnique({
+      where: { id: reportId },
+      include: { tags: true },
+    });
+
+    if (!report) {
+      throw new NotFoundException('Report not found');
+    }
+
+    const tag = await this.prisma.reportTag.findUnique({
+      where: { name: tagName },
+    });
+
+    if (!tag) {
+      throw new NotFoundException('Tag not found');
+    }
+
+    const tagAlreadyAdded = report.tags.some((tag) => tag.name === tagName);
+
+    if (!tagAlreadyAdded) {
+      throw new BadRequestException('Tag not added to this report');
+    }
+
+    const updatedReport = await this.prisma.report.update({
+      where: { id: reportId },
+      data: {
+        tags: {
+          disconnect: {
+            name: tagName,
+          },
+        },
+        activity_logs: {
+          create: {
+            log: `${adminData.name} removed ${tagName} tag from this report`,
+            admin: { connect: { id: adminData.id } },
+          },
+        },
+      },
+      include: {
+        activity_logs: true,
+        assigned_admins: true,
+        attachments: true,
+        category: true,
+        messages: true,
+        priority: true,
+        source: true,
+        tags: true,
+        status: true,
+      },
+    });
+
+    return new ReportForAdminDto({
+      ...updatedReport,
+      description: this.encryptionService.decrypt(updatedReport.description),
+    });
+  }
 }
