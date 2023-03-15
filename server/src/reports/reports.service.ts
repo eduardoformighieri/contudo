@@ -10,6 +10,8 @@ import { Paginated } from 'src/common/interfaces/paginated.interface';
 import { pagination } from 'src/common/utils/pagination';
 import { OrderDirection } from 'src/common/enums/order-direction.enum';
 import { ReportOrderBy } from './enums/report-order-by.enum';
+import { ReportActivityLogsService } from 'src/report-activity-logs/report-activity-logs.service';
+import { AdminWithRoleDto } from 'src/admins/dto/outputs/admin-with-role.dto';
 
 //  orderBy?: Prisma.ReportOrderByWithRelationInput;
 
@@ -18,6 +20,7 @@ export class ReportsService {
   constructor(
     private prisma: PrismaService,
     private encryptionService: EncryptionService,
+    private reportActivityLogsService: ReportActivityLogsService,
   ) {}
 
   async findAll(params: {
@@ -106,9 +109,11 @@ export class ReportsService {
     });
   }
 
-  async createAsAdmin(
-    createReportAsAdminDto: CreateReportAsAdminDto,
-  ): Promise<ReportForAdminDto> {
+  async createAsAdmin(params: {
+    reportDto: CreateReportAsAdminDto;
+    adminData: AdminWithRoleDto;
+  }): Promise<ReportForAdminDto> {
+    const { reportDto, adminData } = params;
     const {
       title,
       attachmentUrls,
@@ -117,7 +122,7 @@ export class ReportsService {
       sourceId,
       statusId,
       reportDate,
-    } = createReportAsAdminDto;
+    } = reportDto;
 
     const report = await this.prisma.report.create({
       data: {
@@ -145,6 +150,13 @@ export class ReportsService {
         tags: true,
         status: true,
       },
+    });
+
+    await this.reportActivityLogsService.create({
+      log: `${adminData.name} created this report`,
+      reportId: report.id,
+      adminId: adminData.id,
+      created_at: report.updated_at,
     });
 
     return new ReportForAdminDto({

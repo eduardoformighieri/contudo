@@ -4,7 +4,7 @@ import {
   Param,
   Post,
   Body,
-  Patch,
+  Request,
   Delete,
   Query,
 } from '@nestjs/common';
@@ -72,8 +72,12 @@ export class ReportsController {
   @Post()
   @ApiOperation({ summary: 'Create Report as Admin' })
   async createAsAdmin(
-    @Body() createReportAsAdminDto: CreateReportAsAdminDto,
+    @Request() req,
+    @Body() reportDto: CreateReportAsAdminDto,
   ): Promise<ReportForAdminDto> {
-    return this.reportsService.createAsAdmin(createReportAsAdminDto);
+    return this.reportsService.createAsAdmin({
+      reportDto,
+      adminData: req.user,
+    });
   }
 }

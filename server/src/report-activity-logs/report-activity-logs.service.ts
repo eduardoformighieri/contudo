@@ -10,10 +10,11 @@ export class ReportActivityLogsService {
   async create(
     createReportActivityLogDto: CreateReportActivityLogDto,
   ): Promise<ReportActivityLog> {
-    const { log, adminId, reportId } = createReportActivityLogDto;
+    const { log, adminId, reportId, created_at } = createReportActivityLogDto;
     const activityLog = await this.prisma.reportActivityLog.create({
       data: {
         log,
+        created_at,
         admin: { connect: { id: adminId } },
         report: { connect: { id: reportId } },
       },

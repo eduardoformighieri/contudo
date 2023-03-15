@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { ReportActivityLog } from '@prisma/client';
 import { IsDate, IsNotEmpty, IsString } from 'class-validator';
 
-export class CreateReportActivityLogDto {
+export class ReportActivityLogDto {
   @ApiProperty({
     example: 'Marco Antonio created this report',
   })
@@ -10,23 +11,15 @@ export class CreateReportActivityLogDto {
   readonly log: string;
 
   @ApiProperty({
-    example: 'd68e3fd6-1723-4ba9-9014-b13d133dd87e',
-  })
-  @IsNotEmpty()
-  @IsString()
-  readonly reportId: string;
-
-  @ApiProperty({
-    example: 'd68e3fd6-1723-4ba9-9014-b13d133dd87e',
-  })
-  @IsNotEmpty()
-  @IsString()
-  readonly adminId: string;
-
-  @ApiProperty({
     example: '2016-09-18T17:34:02.666Z',
   })
   @IsNotEmpty()
   @IsDate()
   readonly created_at: Date;
+
+  constructor(activity_log: ReportActivityLog) {
+    const { created_at, log } = activity_log;
+    this.log = log;
+    this.created_at = created_at;
+  }
 }

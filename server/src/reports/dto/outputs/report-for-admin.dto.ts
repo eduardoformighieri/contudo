@@ -20,6 +20,7 @@ import {
   IsOptional,
   ArrayMinSize,
 } from 'class-validator';
+import { ReportActivityLogDto } from 'src/report-activity-logs/dto/outputs/report-activity-log.dto';
 
 export class ReportForAdminDto {
   @ApiProperty({
@@ -84,7 +85,7 @@ export class ReportForAdminDto {
     example:
       "['{ id: number; sent_by: string; content: string; report_id: string; created_at: Date; updated_at: Date; }', '{ id: number; sent_by: string; content: string; report_id: string; created_at: Date; updated_at: Date; }']",
   })
-  readonly activity_logs: ReportActivityLog[];
+  readonly activity_logs: ReportActivityLogDto[];
 
   @ApiProperty({
     example:
@@ -187,6 +188,8 @@ export class ReportForAdminDto {
     this.guest_identity = guest_identity;
     this.assigned_admins = assigned_admins;
     this.messages = messages;
-    this.activity_logs = activity_logs;
+    this.activity_logs = activity_logs.map(
+      (activity_log) => new ReportActivityLogDto(activity_log),
+    );
   }
 }
