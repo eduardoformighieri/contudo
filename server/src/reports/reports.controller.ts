@@ -80,4 +80,14 @@ export class ReportsController {
       adminData: req.user,
     });
   }
+
+  @Post(':id')
+  @ApiOperation({ summary: 'Add tags to report' })
+  async addTags(
+    @Request() req,
+    @Param('id') id: string,
+    @Body() tagNames: string[],
+  ): Promise<ReportForAdminDto> {
+    return this.reportsService.addTags(req.user, id, tagNames);
+  }
 }

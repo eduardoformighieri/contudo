@@ -12,6 +12,7 @@ import { OrderDirection } from 'src/common/enums/order-direction.enum';
 import { ReportOrderBy } from './enums/report-order-by.enum';
 import { ReportActivityLogsService } from 'src/report-activity-logs/report-activity-logs.service';
 import { AdminWithRoleDto } from 'src/admins/dto/outputs/admin-with-role.dto';
+import { Prisma } from '@prisma/client';
 
 //  orderBy?: Prisma.ReportOrderByWithRelationInput;
 
@@ -185,7 +186,6 @@ export class ReportsService {
     return new ReportForGuestDto({
       ...report,
       description: this.encryptionService.decrypt(report.description),
-      guest_identity: this.encryptionService.decrypt(report.guest_identity),
     });
   }
 
@@ -241,5 +241,62 @@ export class ReportsService {
     });
 
     return { secretReportKey: secretKey };
+  }
+
+  async addTags(
+    adminData: AdminWithRoleDto,
+    reportId: string,
+    tagNames: string[],
+  ): Promise<any> {
+    const report = await this.prisma.report.findUnique({
+      where: { id: reportId },
+      include: { tags: true },
+    });
+
+    if (!report) {
+      throw new NotFoundException('Report not found');
+    }
+
+    const tagsToAdd = tagNames.filter(
+      (tagName) => !report.tags.some((tag) => tag.name === tagName),
+    );
+
+    if (tagsToAdd.length === 0) {
+      return report;
+    }
+
+    const updatedReport = await this.prisma.report.update({
+      where: { id: reportId },
+      data: {
+        tags: {
+          connect: tagsToAdd.map((tagName) => ({ name: tagName })),
+        },
+      },
+      include: {
+        activity_logs: true,
+        assigned_admins: true,
+        attachments: true,
+        category: true,
+        messages: true,
+        priority: true,
+        source: true,
+        tags: true,
+        status: true,
+      },
+    });
+
+    const tagString = tagsToAdd.map((tagName) => tagName).join(', ');
+
+    await this.reportActivityLogsService.create({
+      log: `${adminData.name} added (${tagString}) tag(s) to this report`,
+      reportId,
+      adminId: adminData.id,
+      created_at: updatedReport.updated_at,
+    });
+
+    return new ReportForAdminDto({
+      ...updatedReport,
+      description: this.encryptionService.decrypt(updatedReport.description),
+    });
   }
 }
