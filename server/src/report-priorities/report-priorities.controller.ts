@@ -19,8 +19,6 @@ export class ReportPrioritiesController {
     private readonly reportPrioritiesService: ReportPrioritiesService,
   ) {}
 
-  @Post()
-  @ApiOperation({ summary: 'Create Report Tag' })
   @Get()
   @ApiOperation({ summary: 'Find all Report Priorities' })
   async findAll(): Promise<ReportPriority[]> {
