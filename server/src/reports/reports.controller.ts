@@ -7,6 +7,7 @@ import {
   Request,
   Delete,
   Query,
+  Patch,
 } from '@nestjs/common';
 import { ReportsService } from './reports.service';
 
@@ -22,6 +23,8 @@ import { OrderDirection } from 'src/common/enums/order-direction.enum';
 import { ReportOrderBy } from './enums/report-order-by.enum';
 import { AddTagToReportDto } from './dto/inputs/add-tag-to-report.dto';
 import { RemoveTagFromReportDto } from './dto/inputs/remove-tag-from-report.dto';
+import { ChangeReportStatusDto } from './dto/inputs/change-report-status.dto';
+import { ChangeReportPriorityDto } from './dto/inputs/change-report-priority.dto';
 
 @ApiTags('Reports')
 @Controller('reports')
@@ -83,7 +86,7 @@ export class ReportsController {
     });
   }
 
-  @Post(':id')
+  @Patch(':id')
   @ApiOperation({ summary: 'Add tag to report' })
   async addTag(
     @Request() req,
@@ -97,7 +100,7 @@ export class ReportsController {
     );
   }
 
-  @Post('remove/:id')
+  @Patch('remove/:id')
   @ApiOperation({ summary: 'Remove tag from report' })
   async removeTag(
     @Request() req,
@@ -108,6 +111,32 @@ export class ReportsController {
       req.user,
       reportId,
       removeTagFromReportDto.tagName,
+    );
+  }
+
+  @Patch('priority/:id')
+  async changeReportPriority(
+    @Request() req,
+    @Param('id') reportId: string,
+    @Body() changeReportPriorityDto: ChangeReportPriorityDto,
+  ): Promise<ReportForAdminDto> {
+    return this.reportsService.changeReportPriority(
+      req.user,
+      reportId,
+      changeReportPriorityDto.priorityId,
+    );
+  }
+
+  @Patch('status/:id')
+  async changeReportStatus(
+    @Request() req,
+    @Param('id') reportId: string,
+    @Body() changeReportStatusDto: ChangeReportStatusDto,
+  ): Promise<ReportForAdminDto> {
+    return this.reportsService.changeReportStatus(
+      req.user,
+      reportId,
+      changeReportStatusDto.statusId,
     );
   }
 }

@@ -367,4 +367,112 @@ export class ReportsService {
       description: this.encryptionService.decrypt(updatedReport.description),
     });
   }
+
+  async changeReportPriority(
+    adminData: AdminWithRoleDto,
+    reportId: string,
+    priorityId?: string,
+  ): Promise<ReportForAdminDto> {
+    const report = await this.prisma.report.findUnique({
+      where: { id: reportId },
+      include: { priority: true },
+    });
+
+    if (!report) {
+      throw new NotFoundException('Report not found');
+    }
+
+    const priority = priorityId
+      ? await this.prisma.reportPriority.findUnique({
+          where: { id: priorityId },
+        })
+      : null;
+
+    const updatedReport = await this.prisma.report.update({
+      where: { id: reportId },
+      data: {
+        priority: priority
+          ? { connect: { id: priorityId } }
+          : { disconnect: true },
+        activity_logs: {
+          create: {
+            log: `${adminData.name} ${
+              priority
+                ? `changed priority to ${priority.name} on`
+                : 'removed priority from'
+            } this report`,
+            admin: { connect: { id: adminData.id } },
+          },
+        },
+      },
+      include: {
+        activity_logs: true,
+        assigned_admins: true,
+        attachments: true,
+        category: true,
+        messages: true,
+        priority: true,
+        source: true,
+        tags: true,
+        status: true,
+      },
+    });
+
+    return new ReportForAdminDto({
+      ...updatedReport,
+      description: this.encryptionService.decrypt(updatedReport.description),
+    });
+  }
+
+  async changeReportStatus(
+    adminData: AdminWithRoleDto,
+    reportId: string,
+    statusId: string,
+  ): Promise<ReportForAdminDto> {
+    const report = await this.prisma.report.findUnique({
+      where: { id: reportId },
+      include: { status: true },
+    });
+
+    if (!report) {
+      throw new NotFoundException('Report not found');
+    }
+
+    const status = await this.prisma.reportStatus.findUnique({
+      where: { id: statusId },
+    });
+
+    if (!status) {
+      throw new NotFoundException('Status not found');
+    }
+
+    const updatedReport = await this.prisma.report.update({
+      where: { id: reportId },
+      data: {
+        status: { connect: { id: statusId } },
+        activity_logs: {
+          create: {
+            log: `${adminData.name} changed status to ${status.name} on this report`,
+            admin: { connect: { id: adminData.id } },
+          },
+        },
+      },
+      include: {
+        activity_logs: true,
+        assigned_admins: true,
+        attachments: true,
+        category: true,
+        messages: true,
+        priority: true,
+        source: true,
+        tags: true,
+        status: true,
+      },
+    });
+
+    return new ReportForAdminDto({
+      ...updatedReport,
+      description: this.encryptionService.decrypt(updatedReport.description),
+    });
+  }
 }
