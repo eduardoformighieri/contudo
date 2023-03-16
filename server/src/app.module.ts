@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
+import { AdminRolesModule } from './admin-roles/admin-roles.module';
 
 import { AdminsModule } from './admins/admins.module';
 import { AuthModule } from './auth/auth.module';
@@ -29,6 +30,7 @@ import { ReportsModule } from './reports/reports.module';
     ReportStatusesModule,
     ReportSourcesModule,
     ReportCategoriesModule,
+    AdminRolesModule,
   ],
 })
 export class AppModule {}
