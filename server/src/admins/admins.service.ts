@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { Admin, Prisma } from '@prisma/client';
@@ -65,13 +66,33 @@ export class AdminsService {
   }
 
   async create(createAdminDto: CreateAdminDto): Promise<AdminWithRoleDto> {
-    const { email, name, password, role } = createAdminDto;
+    const { email, name, password, roleId } = createAdminDto;
 
-    const existingAdmin = await this.prisma.admin.findUnique({
+    const [highestPowerAdminRole] = await this.prisma.adminRole.findMany({
+      orderBy: {
+        power_level: 'desc',
+      },
+      take: 1,
+    });
+
+    if (highestPowerAdminRole.id === roleId) {
+      throw new UnauthorizedException();
+    }
+
+    const emailAlreadyInUse = await this.prisma.admin.findUnique({
       where: { email },
     });
-    if (existingAdmin) {
+
+    if (emailAlreadyInUse) {
       throw new BadRequestException('Email already in use');
+    }
+
+    const role = await this.prisma.adminRole.findUnique({
+      where: { id: roleId },
+    });
+
+    if (!role) {
+      throw new NotFoundException('Role  not found');
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
@@ -82,7 +103,7 @@ export class AdminsService {
         name,
         password: hashPassword,
         role: {
-          connect: { name: role },
+          connect: { id: role.id },
         },
       },
       include: {
@@ -152,5 +173,45 @@ export class AdminsService {
       },
     });
     return new AdminWithRoleDto(admin);
+  }
+
+  async transferSuperAdminRole(
+    currentSuperAdminId: string,
+    promotedAdminId: string,
+  ): Promise<any> {
+    const [highestPowerAdminRole, secondHighestPowerAdminRole] =
+      await this.prisma.adminRole.findMany({
+        orderBy: {
+          power_level: 'desc',
+        },
+        take: 2,
+      });
+
+    const result = await this.prisma.$transaction([
+      this.prisma.admin.update({
+        data: {
+          role: { connect: { id: secondHighestPowerAdminRole.id } },
+        },
+        where: {
+          id: currentSuperAdminId,
+        },
+        include: {
+          role: true,
+        },
+      }),
+      this.prisma.admin.update({
+        data: {
+          role: { connect: { id: highestPowerAdminRole.id } },
+        },
+        where: {
+          id: promotedAdminId,
+        },
+        include: {
+          role: true,
+        },
+      }),
+    ]);
+
+    return result;
   }
 }

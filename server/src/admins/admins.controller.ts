@@ -87,7 +87,7 @@ export class AdminsController {
   @Patch('/me')
   @ApiOperation({ summary: 'Update self Admin data' })
   async updateSelfAdmin(
-    @Request() req: { user: AdminWithRoleDto },
+    @Request() req: { user: { id: string } },
     @Body() updateAdminDto: UpdateAdminDto,
   ): Promise<AdminWithRoleDto> {
     return this.adminsService.update({
@@ -103,5 +103,19 @@ export class AdminsController {
   async deletePost(@Param('id') id: string) {
     this.adminsService.delete({ id });
     return { message: 'Admin deleted successfully' };
+  }
+
+  @Patch('roles/promotesuperadmin/:id')
+  @UseGuards(RolesGuard)
+  @Roles(Role.Leader)
+  @ApiOperation({ summary: 'Transfer super Admin' })
+  async transferSuperAdminRole(
+    @Request() req: { user: { id: string } },
+    @Param('id') promotedAdminId: string,
+  ) {
+    return this.adminsService.transferSuperAdminRole(
+      req.user.id,
+      promotedAdminId,
+    );
   }
 }
