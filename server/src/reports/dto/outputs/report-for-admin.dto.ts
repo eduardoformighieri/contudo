@@ -20,6 +20,7 @@ import {
   IsOptional,
   ArrayMinSize,
 } from 'class-validator';
+import { AdminWithRoleDto } from 'src/admins/dto/outputs/admin-with-role.dto';
 import { ReportActivityLogDto } from './report-activity-log.dto';
 
 export class ReportForAdminDto {
@@ -97,7 +98,7 @@ export class ReportForAdminDto {
     example:
       "['{ id: number; sent_by: string; content: string; report_id: string; created_at: Date; updated_at: Date; }', '{ id: number; sent_by: string; content: string; report_id: string; created_at: Date; updated_at: Date; }']",
   })
-  readonly assigned_admins: Admin[];
+  readonly assigned_admins: AdminWithRoleDto[];
 
   @ApiProperty({
     example: 'Phone',
@@ -152,7 +153,7 @@ export class ReportForAdminDto {
       source: ReportSource;
       tags: ReportTag[];
       activity_logs: ReportActivityLog[];
-      assigned_admins: Admin[];
+      assigned_admins: Array<Admin & { role: AdminRole }>;
     },
   ) {
     const {
@@ -186,7 +187,9 @@ export class ReportForAdminDto {
     this.tags = tags;
     this.priority = priority?.name || null;
     this.guest_identity = guest_identity;
-    this.assigned_admins = assigned_admins;
+    this.assigned_admins = assigned_admins.map(
+      (admin) => new AdminWithRoleDto(admin),
+    );
     this.messages = messages;
     this.activity_logs = activity_logs.map(
       (activity_log) => new ReportActivityLogDto(activity_log),

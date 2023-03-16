@@ -55,7 +55,11 @@ export class ReportsService {
       take,
       include: {
         activity_logs: true,
-        assigned_admins: true,
+        assigned_admins: {
+          include: {
+            role: true,
+          },
+        },
         attachments: true,
         category: true,
         messages: true,
@@ -91,7 +95,11 @@ export class ReportsService {
       },
       include: {
         activity_logs: true,
-        assigned_admins: true,
+        assigned_admins: {
+          include: {
+            role: true,
+          },
+        },
         attachments: true,
         category: true,
         messages: true,
@@ -150,7 +158,11 @@ export class ReportsService {
 
       include: {
         activity_logs: true,
-        assigned_admins: true,
+        assigned_admins: {
+          include: {
+            role: true,
+          },
+        },
         attachments: true,
         category: true,
         messages: true,
@@ -230,7 +242,11 @@ export class ReportsService {
 
       include: {
         activity_logs: true,
-        assigned_admins: true,
+        assigned_admins: {
+          include: {
+            role: true,
+          },
+        },
         attachments: true,
         category: true,
         messages: true,
@@ -248,7 +264,7 @@ export class ReportsService {
     adminData: AdminWithRoleDto,
     reportId: string,
     tagName: string,
-  ): Promise<any> {
+  ): Promise<ReportForAdminDto> {
     const report = await this.prisma.report.findUnique({
       where: { id: reportId },
       include: { tags: true },
@@ -289,7 +305,11 @@ export class ReportsService {
       },
       include: {
         activity_logs: true,
-        assigned_admins: true,
+        assigned_admins: {
+          include: {
+            role: true,
+          },
+        },
         attachments: true,
         category: true,
         messages: true,
@@ -351,7 +371,147 @@ export class ReportsService {
       },
       include: {
         activity_logs: true,
-        assigned_admins: true,
+        assigned_admins: {
+          include: {
+            role: true,
+          },
+        },
+        attachments: true,
+        category: true,
+        messages: true,
+        priority: true,
+        source: true,
+        tags: true,
+        status: true,
+      },
+    });
+
+    return new ReportForAdminDto({
+      ...updatedReport,
+      description: this.encryptionService.decrypt(updatedReport.description),
+    });
+  }
+
+  async assignAdmin(
+    adminData: AdminWithRoleDto,
+    reportId: string,
+    adminId: string,
+  ): Promise<ReportForAdminDto> {
+    const report = await this.prisma.report.findUnique({
+      where: { id: reportId },
+      include: { assigned_admins: true },
+    });
+
+    if (!report) {
+      throw new NotFoundException('Report not found');
+    }
+
+    const admin = await this.prisma.admin.findUnique({
+      where: { id: adminId },
+    });
+
+    if (!admin) {
+      throw new NotFoundException('Admin not found');
+    }
+
+    const adminAlreadyAdded = report.assigned_admins.some(
+      (admin) => admin.id === adminId,
+    );
+
+    if (adminAlreadyAdded) {
+      throw new BadRequestException('Admin already assigned to this report');
+    }
+
+    const updatedReport = await this.prisma.report.update({
+      where: { id: reportId },
+      data: {
+        assigned_admins: {
+          connect: {
+            id: adminId,
+          },
+        },
+        activity_logs: {
+          create: {
+            log: `${adminData.name} assigned ${admin.name} to this report`,
+            admin: { connect: { id: adminData.id } },
+          },
+        },
+      },
+      include: {
+        activity_logs: true,
+        assigned_admins: {
+          include: {
+            role: true,
+          },
+        },
+        attachments: true,
+        category: true,
+        messages: true,
+        priority: true,
+        source: true,
+        tags: true,
+        status: true,
+      },
+    });
+
+    return new ReportForAdminDto({
+      ...updatedReport,
+      description: this.encryptionService.decrypt(updatedReport.description),
+    });
+  }
+
+  async unassigAdmin(
+    adminData: AdminWithRoleDto,
+    reportId: string,
+    adminId: string,
+  ): Promise<ReportForAdminDto> {
+    const report = await this.prisma.report.findUnique({
+      where: { id: reportId },
+      include: { assigned_admins: true },
+    });
+
+    if (!report) {
+      throw new NotFoundException('Report not found');
+    }
+
+    const admin = await this.prisma.admin.findUnique({
+      where: { id: adminId },
+    });
+
+    if (!admin) {
+      throw new NotFoundException('Admin not found');
+    }
+
+    const adminAlreadyAdded = report.assigned_admins.some(
+      (admin) => admin.id === adminId,
+    );
+
+    if (!adminAlreadyAdded) {
+      throw new BadRequestException('Admin not assigned to this report');
+    }
+
+    const updatedReport = await this.prisma.report.update({
+      where: { id: reportId },
+      data: {
+        assigned_admins: {
+          disconnect: {
+            id: adminId,
+          },
+        },
+        activity_logs: {
+          create: {
+            log: `${adminData.name} unassigned ${admin.name} from this report`,
+            admin: { connect: { id: adminData.id } },
+          },
+        },
+      },
+      include: {
+        activity_logs: true,
+        assigned_admins: {
+          include: {
+            role: true,
+          },
+        },
         attachments: true,
         category: true,
         messages: true,
@@ -407,7 +567,11 @@ export class ReportsService {
       },
       include: {
         activity_logs: true,
-        assigned_admins: true,
+        assigned_admins: {
+          include: {
+            role: true,
+          },
+        },
         attachments: true,
         category: true,
         messages: true,
@@ -459,7 +623,11 @@ export class ReportsService {
       },
       include: {
         activity_logs: true,
-        assigned_admins: true,
+        assigned_admins: {
+          include: {
+            role: true,
+          },
+        },
         attachments: true,
         category: true,
         messages: true,

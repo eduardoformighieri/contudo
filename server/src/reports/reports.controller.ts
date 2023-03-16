@@ -25,6 +25,8 @@ import { AddTagToReportDto } from './dto/inputs/add-tag-to-report.dto';
 import { RemoveTagFromReportDto } from './dto/inputs/remove-tag-from-report.dto';
 import { ChangeReportStatusDto } from './dto/inputs/change-report-status.dto';
 import { ChangeReportPriorityDto } from './dto/inputs/change-report-priority.dto';
+import { AssignAdminToReportDto } from './dto/inputs/assign-admin-to-report.dto';
+import { UnassigAdminFromReportDto } from './dto/inputs/unassign-admin-to-report.dto';
 
 @ApiTags('Reports')
 @Controller('reports')
@@ -86,7 +88,7 @@ export class ReportsController {
     });
   }
 
-  @Patch(':id')
+  @Patch(':id/add-tag')
   @ApiOperation({ summary: 'Add tag to report' })
   async addTag(
     @Request() req,
@@ -100,7 +102,7 @@ export class ReportsController {
     );
   }
 
-  @Patch('remove/:id')
+  @Patch(':id/remove-tag')
   @ApiOperation({ summary: 'Remove tag from report' })
   async removeTag(
     @Request() req,
@@ -114,7 +116,35 @@ export class ReportsController {
     );
   }
 
-  @Patch('priority/:id')
+  @Patch(':id/assign-admin')
+  @ApiOperation({ summary: 'Assign admin to report' })
+  async assignAdmin(
+    @Request() req,
+    @Param('id') reportId: string,
+    @Body() assignAdminToReportDto: AssignAdminToReportDto,
+  ): Promise<ReportForAdminDto> {
+    return this.reportsService.assignAdmin(
+      req.user,
+      reportId,
+      assignAdminToReportDto.adminId,
+    );
+  }
+
+  @Patch(':id/unassig-admin')
+  @ApiOperation({ summary: ' Unassig admin from report' })
+  async unassigAdmin(
+    @Request() req,
+    @Param('id') reportId: string,
+    @Body() unassigAdminFromReportDto: UnassigAdminFromReportDto,
+  ): Promise<ReportForAdminDto> {
+    return this.reportsService.unassigAdmin(
+      req.user,
+      reportId,
+      unassigAdminFromReportDto.adminId,
+    );
+  }
+
+  @Patch(':id/priority')
   async changeReportPriority(
     @Request() req,
     @Param('id') reportId: string,
@@ -127,7 +157,7 @@ export class ReportsController {
     );
   }
 
-  @Patch('status/:id')
+  @Patch(':id/status')
   async changeReportStatus(
     @Request() req,
     @Param('id') reportId: string,
