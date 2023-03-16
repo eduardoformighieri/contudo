@@ -21,6 +21,7 @@ import { HierarchyGuard } from './roles/hierarchy.guard';
 import { Roles } from './roles/roles.decorator';
 import { Role } from './roles/roles.enum';
 import { RolesGuard } from './roles/roles.guard';
+import { SwitchAdminRoleDto } from './dto/inputs/switch-admin-role.dto';
 
 @ApiTags('Admins')
 @Controller('admins')
@@ -70,6 +71,17 @@ export class AdminsController {
       where: { id },
       data: updateAdminDto,
     });
+  }
+
+  @Patch('roles/admin/:id')
+  @ApiOperation({ summary: 'Switch other Admin role' })
+  @UseGuards(HierarchyGuard, RolesGuard)
+  @Roles(Role.Leader, Role.Coleader)
+  async switchAdminRole(
+    @Param('id') id: string,
+    @Body() switchAdminRoleDto: SwitchAdminRoleDto,
+  ): Promise<AdminWithRoleDto> {
+    return this.adminsService.switchAdminRole(id, switchAdminRoleDto.newRoleId);
   }
 
   @Patch('/me')

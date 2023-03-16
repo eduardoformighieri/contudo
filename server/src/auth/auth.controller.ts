@@ -26,13 +26,13 @@ export class AuthController {
   @ApiOperation({ summary: 'Login Admin' })
   @ApiBody({ type: LoginDto })
   async login(@Request() req) {
-    return this.authService.login(req.user);
+    return this.authService.generateJwt(req.user);
   }
 
   @Get('me')
   @ApiOperation({ summary: 'Get information about the logged Admin' })
   getProfile(@Request() req) {
-    return req.user;
+    return this.authService.findMe(req.user.id);
   }
 
   @Patch('updatePassword')

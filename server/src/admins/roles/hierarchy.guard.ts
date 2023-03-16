@@ -10,21 +10,28 @@ export class HierarchyGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
 
-    const { user }: { user: AdminWithRoleDto } = request;
-    const { id } = request?.params;
-    const { power_level: affectingAdminPowerLevel } =
-      await this.prisma.adminRole.findFirst({
-        where: { name: user.role },
-      });
-    const affectedAdmin = await this.prisma.admin.findFirst({ where: { id } });
-    const { power_level: affectedAdminPowerLevel } =
-      await this.prisma.adminRole.findFirst({
-        where: { id: affectedAdmin.role_id },
-      });
+    const { user: affectingAdmin }: { user: { id: string } } = request;
+    const { id: affectedAdminId } = request?.params;
 
-    if (affectingAdminPowerLevel <= affectedAdminPowerLevel) {
+    if (affectingAdmin.id === affectedAdminId) return false;
+
+    const { role: affectingAdminRole } = await this.prisma.admin.findFirst({
+      where: { id: affectingAdmin.id },
+      select: {
+        role: true,
+      },
+    });
+
+    const { role: affectedAdminRole } = await this.prisma.admin.findFirst({
+      where: { id: affectedAdminId },
+      select: {
+        role: true,
+      },
+    });
+
+    if (affectingAdminRole.power_level <= affectedAdminRole.power_level)
       return false;
-    }
+
     return true;
   }
 }

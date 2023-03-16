@@ -11,6 +11,7 @@ import * as bcrypt from 'bcryptjs';
 import { PrismaService } from 'src/prisma.service';
 import { UpdatePasswordDto } from './dto/inputs/update-password.dto';
 import { AdminWithRoleDto } from 'src/admins/dto/outputs/admin-with-role.dto';
+import { JwtPayload } from './interfaces/jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
@@ -19,11 +20,9 @@ export class AuthService {
     private prisma: PrismaService,
   ) {}
 
-  async findOne(
-    postWhereUniqueInput: Prisma.AdminWhereUniqueInput,
-  ): Promise<Admin & { role: AdminRole }> {
+  async findMe(id: string): Promise<AdminWithRoleDto> {
     const admin = await this.prisma.admin.findUnique({
-      where: postWhereUniqueInput,
+      where: { id },
       include: {
         role: true,
       },
@@ -33,27 +32,13 @@ export class AuthService {
       throw new NotFoundException('Admin not found');
     }
 
-    return admin;
+    return new AdminWithRoleDto(admin);
   }
 
-  async validateAdmin({
-    email,
-    password,
-  }: LoginDto): Promise<AdminWithRoleDto> {
-    const admin = await this.findOne({ email });
-    if (admin && (await bcrypt.compare(password, admin.password))) {
-      return new AdminWithRoleDto(admin);
-    }
-    return null;
-  }
-
-  async login({
+  async generateJwt({
     id,
-    name,
-    email,
-    role,
   }: AdminWithRoleDto): Promise<{ access_token: string }> {
-    const payload = { name, email, role, sub: id };
+    const payload: JwtPayload = { sub: id };
     return {
       access_token: this.jwtService.sign(payload),
     };

@@ -127,4 +127,30 @@ export class AdminsService {
     });
     return new AdminWithRoleDto(admin);
   }
+
+  async switchAdminRole(
+    adminId: string,
+    newRoleId: string,
+  ): Promise<AdminWithRoleDto> {
+    const role = await this.prisma.adminRole.findUnique({
+      where: { id: newRoleId },
+    });
+
+    if (!role) {
+      throw new NotFoundException('Role not found');
+    }
+
+    const admin = await this.prisma.admin.update({
+      data: {
+        role: { connect: { id: newRoleId } },
+      },
+      where: {
+        id: adminId,
+      },
+      include: {
+        role: true,
+      },
+    });
+    return new AdminWithRoleDto(admin);
+  }
 }

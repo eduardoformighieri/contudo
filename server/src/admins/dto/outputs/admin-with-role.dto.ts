@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsInt, IsNotEmpty, IsString } from 'class-validator';
 import { Admin, AdminRole, Prisma } from '@prisma/client';
+import { AdminRoleDto } from 'src/admins/roles/admin-role.dto';
 
 export class AdminWithRoleDto {
   @ApiProperty({
@@ -28,14 +29,13 @@ export class AdminWithRoleDto {
     example: 'co-leader',
   })
   @IsNotEmpty()
-  @IsString()
-  readonly role: string;
+  readonly role: AdminRoleDto;
 
   constructor(admin: Admin & { role: AdminRole }) {
     const { name, email, role, id } = admin;
     this.id = id;
     this.name = name;
     this.email = email;
-    this.role = role.name;
+    this.role = new AdminRoleDto(role);
   }
 }
