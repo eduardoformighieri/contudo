@@ -15,7 +15,7 @@ import { pagination } from 'src/common/utils/pagination';
 import { OrderDirection } from 'src/common/enums/order-direction.enum';
 import { ReportOrderBy } from './enums/report-order-by.enum';
 import { AdminWithRoleDto } from 'src/admins/dto/outputs/admin-with-role.dto';
-import { Prisma } from '@prisma/client';
+import { Prisma, ReportMessage } from '@prisma/client';
 
 //  orderBy?: Prisma.ReportOrderByWithRelationInput;
 

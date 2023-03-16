@@ -19,6 +19,13 @@ import {
 
 export class ReportForGuestDto {
   @ApiProperty({
+    example: 'd68e3fd6-1723-4ba9-9014-b13d133dd87e',
+  })
+  @IsNotEmpty()
+  @IsString()
+  readonly id: string;
+
+  @ApiProperty({
     example: 'Marco Antonio',
   })
   @IsNotEmpty()
@@ -99,6 +106,7 @@ export class ReportForGuestDto {
     },
   ) {
     const {
+      id,
       title,
       attachments,
       messages,
@@ -109,6 +117,7 @@ export class ReportForGuestDto {
       description,
       guest_identity,
     } = report;
+    this.id = id;
     this.guest_identity = guest_identity;
     this.title = title;
     this.description = description;
