@@ -207,7 +207,7 @@ export class ReportsService {
   async attachEmailAsGuestForUpdates(
     secretKey: string,
     email: string,
-  ): Promise<any> {
+  ): Promise<{ message: string }> {
     const report = await this.prisma.report.findUnique({
       where: {
         secret_key: secretKey,
@@ -227,6 +227,30 @@ export class ReportsService {
       },
     });
     return { message: 'Email attached successfully' };
+  }
+
+  async detachEmailFromReportAsGuest(
+    secretKey: string,
+  ): Promise<{ message: string }> {
+    const report = await this.prisma.report.findUnique({
+      where: {
+        secret_key: secretKey,
+      },
+    });
+
+    if (!report) {
+      throw new NotFoundException('Report not found');
+    }
+
+    await this.prisma.report.update({
+      where: {
+        id: report.id,
+      },
+      data: {
+        guest_email_for_post_box: null,
+      },
+    });
+    return { message: 'Email detached successfully' };
   }
 
   async createAsGuest(

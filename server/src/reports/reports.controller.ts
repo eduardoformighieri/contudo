@@ -70,16 +70,25 @@ export class ReportsController {
   }
 
   @Public()
-  @Patch('guest/:id/add-email')
-  @ApiOperation({ summary: 'Add email to report by secret report key' })
-  async addPostBoxAsGuest(
+  @Patch('guest/:id/attach-email')
+  @ApiOperation({ summary: 'Attach email to report by secret report key' })
+  async attachEmailAsGuestForUpdates(
     @Param('secretKey') secretKey: string,
     @Body() addEmailToReportDto: AddEmailToReportDto,
-  ): Promise<ReportForAdminDto> {
+  ): Promise<{ message: string }> {
     return this.reportsService.attachEmailAsGuestForUpdates(
       secretKey,
       addEmailToReportDto.email,
     );
+  }
+
+  @Public()
+  @Patch('guest/:id/detach-email')
+  @ApiOperation({ summary: 'Detach email from report by secret report key' })
+  async detachEmailAsGuestForUpdates(
+    @Param('secretKey') secretKey: string,
+  ): Promise<{ message: string }> {
+    return this.reportsService.detachEmailFromReportAsGuest(secretKey);
   }
 
   @Public()
