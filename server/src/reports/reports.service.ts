@@ -16,6 +16,7 @@ import { OrderDirection } from 'src/common/enums/order-direction.enum';
 import { ReportOrderBy } from './enums/report-order-by.enum';
 import { AdminWithRoleDto } from 'src/admins/dto/outputs/admin-with-role.dto';
 import { Prisma, ReportMessage } from '@prisma/client';
+import { EmailService } from 'src/email/email.service';
 
 //  orderBy?: Prisma.ReportOrderByWithRelationInput;
 
@@ -24,6 +25,7 @@ export class ReportsService {
   constructor(
     private prisma: PrismaService,
     private encryptionService: EncryptionService,
+    private readonly emailService: EmailService,
   ) {}
 
   async findAll(params: {
@@ -200,6 +202,31 @@ export class ReportsService {
       ...report,
       description: this.encryptionService.decrypt(report.description),
     });
+  }
+
+  async attachEmailAsGuestForUpdates(
+    secretKey: string,
+    email: string,
+  ): Promise<any> {
+    const report = await this.prisma.report.findUnique({
+      where: {
+        secret_key: secretKey,
+      },
+    });
+
+    if (!report) {
+      throw new NotFoundException('Report not found');
+    }
+
+    await this.prisma.report.update({
+      where: {
+        id: report.id,
+      },
+      data: {
+        guest_email_for_post_box: this.encryptionService.encrypt(email),
+      },
+    });
+    return { message: 'Email attached successfully' };
   }
 
   async createAsGuest(

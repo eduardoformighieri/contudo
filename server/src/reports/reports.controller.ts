@@ -27,6 +27,7 @@ import { ChangeReportStatusDto } from './dto/inputs/change-report-status.dto';
 import { ChangeReportPriorityDto } from './dto/inputs/change-report-priority.dto';
 import { AssignAdminToReportDto } from './dto/inputs/assign-admin-to-report.dto';
 import { UnassigAdminFromReportDto } from './dto/inputs/unassign-admin-to-report.dto';
+import { AddEmailToReportDto } from './dto/inputs/add-email-to-report-as-guest.dto';
 
 @ApiTags('Reports')
 @Controller('reports')
@@ -59,8 +60,8 @@ export class ReportsController {
     return this.reportsService.findById(id);
   }
 
-  @Get('guest/:secretKey')
   @Public()
+  @Get('guest/:secretKey')
   @ApiOperation({ summary: 'Find Report by secret report key' })
   async getReportBySecretReportKey(
     @Param('secretKey') secretKey: string,
@@ -68,6 +69,20 @@ export class ReportsController {
     return this.reportsService.findBySecretKey(secretKey);
   }
 
+  @Public()
+  @Patch('guest/:id/add-tag')
+  @ApiOperation({ summary: 'Add tag to report' })
+  async addEmail(
+    @Param('secretKey') secretKey: string,
+    @Body() addEmailToReportDto: AddEmailToReportDto,
+  ): Promise<ReportForAdminDto> {
+    return this.reportsService.attachEmailAsGuestForUpdates(
+      secretKey,
+      addEmailToReportDto.email,
+    );
+  }
+
+  @Public()
   @Post('guest')
   @ApiOperation({ summary: 'Create Report as guest' })
   async createAsGuest(
