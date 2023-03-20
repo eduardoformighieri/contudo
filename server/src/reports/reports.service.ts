@@ -689,6 +689,13 @@ export class ReportsService {
       },
     });
 
+    if (!!report.guest_email_for_post_box) {
+      await this.emailService.sendGuestReportUpdate(
+        this.encryptionService.decrypt(report.guest_email_for_post_box),
+        'An admin changed your report status',
+      );
+    }
+
     return new ReportForAdminDto({
       ...updatedReport,
       description: this.encryptionService.decrypt(updatedReport.description),
