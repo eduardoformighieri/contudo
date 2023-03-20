@@ -70,9 +70,9 @@ export class ReportsController {
   }
 
   @Public()
-  @Patch('guest/:id/add-tag')
-  @ApiOperation({ summary: 'Add tag to report' })
-  async addEmail(
+  @Patch('guest/:id/add-email')
+  @ApiOperation({ summary: 'Add email to report by secret report key' })
+  async addPostBoxAsGuest(
     @Param('secretKey') secretKey: string,
     @Body() addEmailToReportDto: AddEmailToReportDto,
   ): Promise<ReportForAdminDto> {
