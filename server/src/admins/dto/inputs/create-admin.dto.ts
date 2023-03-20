@@ -17,13 +17,6 @@ export class CreateAdminDto {
   readonly email: string;
 
   @ApiProperty({
-    example: '123456789',
-  })
-  @IsNotEmpty()
-  @IsString()
-  readonly password: string;
-
-  @ApiProperty({
     example: '1',
   })
   @IsNotEmpty()

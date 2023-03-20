@@ -13,6 +13,7 @@ import { ReportSourcesModule } from './report-sources/report-sources.module';
 import { ReportStatusesModule } from './report-statuses/report-statuses.module';
 import { ReportTagsModule } from './report-tags/report-tags.module';
 import { ReportsModule } from './reports/reports.module';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   providers: [
@@ -23,6 +24,16 @@ import { ReportsModule } from './reports/reports.module';
   ],
   imports: [
     ConfigModule.forRoot(),
+    MailerModule.forRoot({
+      transport: {
+        service: 'gmail',
+        secure: true,
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+      },
+    }),
     AdminsModule,
     AuthModule,
     ReportsModule,
@@ -32,7 +43,6 @@ import { ReportsModule } from './reports/reports.module';
     ReportSourcesModule,
     ReportCategoriesModule,
     AdminRolesModule,
-    ReportMessagessModule,
   ],
 })
 export class AppModule {}

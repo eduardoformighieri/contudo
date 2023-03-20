@@ -12,6 +12,7 @@ import { AdminWithRoleDto } from 'src/admins/dto/outputs/admin-with-role.dto';
 import { Public } from 'src/common/decorators/public.decorator';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/inputs/login.dto';
+import { SignUpDto } from './dto/inputs/sign-up.dto';
 import { UpdatePasswordDto } from './dto/inputs/update-password.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 
@@ -33,6 +34,12 @@ export class AuthController {
   @ApiOperation({ summary: 'Get information about the logged Admin' })
   getProfile(@Request() req) {
     return this.authService.findMe(req.user.id);
+  }
+
+  @Patch('signUp')
+  @ApiOperation({ summary: 'Sign up' })
+  signUp(@Request() req, @Body() signUpDto: SignUpDto) {
+    return this.authService.signUp(req.user.id, signUpDto.password);
   }
 
   @Patch('updatePassword')

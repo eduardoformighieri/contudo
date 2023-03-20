@@ -5,6 +5,6 @@ import { ReportMessagesGateway } from './report-messages.gateway';
 
 @Module({
   providers: [ReportMessagesGateway, ReportsService],
-  exports: [ReportMessagesGateway],
+  exports: [ReportMessagesGateway, ReportsService],
 })
 export class ReportMessagessModule {}

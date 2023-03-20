@@ -15,13 +15,13 @@ import { AdminsService } from './admins.service';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Paginated } from 'src/common/interfaces/paginated.interface';
 import { CreateAdminDto } from './dto/inputs/create-admin.dto';
+import { SwitchAdminRoleDto } from './dto/inputs/switch-admin-role.dto';
 import { UpdateAdminDto } from './dto/inputs/update-admin.dto';
 import { AdminWithRoleDto } from './dto/outputs/admin-with-role.dto';
 import { HierarchyGuard } from './roles/hierarchy.guard';
 import { Roles } from './roles/roles.decorator';
 import { Role } from './roles/roles.enum';
 import { RolesGuard } from './roles/roles.guard';
-import { SwitchAdminRoleDto } from './dto/inputs/switch-admin-role.dto';
 
 @ApiTags('Admins')
 @Controller('admins')
@@ -100,9 +100,8 @@ export class AdminsController {
   @UseGuards(HierarchyGuard, RolesGuard)
   @Roles(Role.Leader, Role.Coleader)
   @ApiOperation({ summary: 'Delete Admin' })
-  async deletePost(@Param('id') id: string) {
-    this.adminsService.delete({ id });
-    return { message: 'Admin deleted successfully' };
+  async deletePost(@Param('id') id: string): Promise<{ message: string }> {
+    return await this.adminsService.delete({ id });
   }
 
   @Patch('roles/promotesuperadmin/:id')

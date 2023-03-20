@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -42,6 +43,31 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  async signUp(adminId: string, password: string): Promise<any> {
+    const admin = await this.prisma.admin.findUnique({
+      where: { id: adminId },
+    });
+    if (!admin) {
+      throw new NotFoundException('Admin not found');
+    }
+
+    if (!admin.isFirstAccess) {
+      throw new ConflictException('First access already done');
+    }
+
+    const hashPassword = await bcrypt.hash(password, 10);
+
+    await this.prisma.admin.update({
+      where: { id: adminId },
+      data: {
+        password: hashPassword,
+        isFirstAccess: false,
+      },
+    });
+
+    return { message: 'Successfull Sign up' };
   }
 
   async updatePassword(params: {

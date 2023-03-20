@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -13,12 +14,18 @@ import { AdminWithRoleDto } from './dto/outputs/admin-with-role.dto';
 import * as bcrypt from 'bcryptjs';
 import { EncryptionService } from 'src/common/services/encryption.service';
 import { pagination } from 'src/common/utils/pagination';
+import { JwtService } from '@nestjs/jwt';
+import { EmailService } from 'src/email/email.service';
 
 //  orderBy?: Prisma.AdminOrderByWithRelationInput;
 
 @Injectable()
 export class AdminsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly jwtService: JwtService,
+    private readonly emailService: EmailService,
+  ) {}
 
   async findOne(where: { id: string }): Promise<AdminWithRoleDto> {
     const admin = await this.prisma.admin.findUnique({
@@ -66,7 +73,7 @@ export class AdminsService {
   }
 
   async create(createAdminDto: CreateAdminDto): Promise<AdminWithRoleDto> {
-    const { email, name, password, roleId } = createAdminDto;
+    const { email, name, roleId } = createAdminDto;
 
     const [highestPowerAdminRole] = await this.prisma.adminRole.findMany({
       orderBy: {
@@ -95,13 +102,10 @@ export class AdminsService {
       throw new NotFoundException('Role  not found');
     }
 
-    const hashPassword = await bcrypt.hash(password, 10);
-
     const admin = await this.prisma.admin.create({
       data: {
         email,
         name,
-        password: hashPassword,
         role: {
           connect: { id: role.id },
         },
@@ -110,6 +114,15 @@ export class AdminsService {
         role: true,
       },
     });
+
+    const token = await this.jwtService.sign(
+      {
+        sub: admin.id,
+      },
+      { secret: process.env.JWT_SECRET },
+    );
+
+    await this.emailService.sendFirstAccess(email, token);
 
     return new AdminWithRoleDto(admin);
   }
@@ -139,14 +152,16 @@ export class AdminsService {
     return new AdminWithRoleDto(admin);
   }
 
-  async delete(where: Prisma.AdminWhereUniqueInput): Promise<AdminWithRoleDto> {
-    const admin = await this.prisma.admin.delete({
+  async delete(
+    where: Prisma.AdminWhereUniqueInput,
+  ): Promise<{ message: string }> {
+    await this.prisma.admin.delete({
       where,
       include: {
         role: true,
       },
     });
-    return new AdminWithRoleDto(admin);
+    return { message: 'You defined your password successfully' };
   }
 
   async switchAdminRole(
