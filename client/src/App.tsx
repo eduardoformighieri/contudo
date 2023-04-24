@@ -1,11 +1,11 @@
 import { ChakraProvider } from '@chakra-ui/react';
-import { Home } from './routes/Home';
+import { TicketEmployee } from './routes/TicketEmployee';
 
 export function App() {
   // 2. Wrap ChakraProvider at the root of your app
   return (
     <ChakraProvider>
-      <Home />
+      <TicketEmployee/>
     </ChakraProvider>
   );
 }

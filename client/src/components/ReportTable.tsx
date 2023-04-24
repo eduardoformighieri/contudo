@@ -1,4 +1,5 @@
 import {
+  Box,
   Flex,
   Table,
   TableCaption,
@@ -13,41 +14,131 @@ import {
 
 export const ReportTable = () => {
   return (
-    <TableContainer>
-      <Table variant="simple">
-        <TableCaption>Imperial to metric conversion factors</TableCaption>
-        <Thead>
-          <Tr>
-            <Th>To convert</Th>
-            <Th>into</Th>
-            <Th isNumeric>multiply by</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          <Tr>
-            <Td>inches</Td>
-            <Td>millimetres (mm)</Td>
-            <Td isNumeric>25.4</Td>
-          </Tr>
-          <Tr>
-            <Td>feet</Td>
-            <Td>centimetres (cm)</Td>
-            <Td isNumeric>30.48</Td>
-          </Tr>
-          <Tr>
-            <Td>yards</Td>
-            <Td>metres (m)</Td>
-            <Td isNumeric>0.91444</Td>
-          </Tr>
-        </Tbody>
-        <Tfoot>
-          <Tr>
-            <Th>To convert</Th>
-            <Th>into</Th>
-            <Th isNumeric>multiply by</Th>
-          </Tr>
-        </Tfoot>
-      </Table>
-    </TableContainer>
+    <Box border={1} margin={10} bg='#121212'  borderRadius={10} mt={'50px'}>
+      <TableContainer>
+        <Table variant="simple">
+        <TableCaption>15 Total tickets</TableCaption>
+          <Thead>
+            <Tr>
+              <Th color={'white'}>ID</Th>
+              <Th color={'white'}>Category</Th>
+              <Th color={'white'}>Requester</Th>
+              <Th color={'white'}>Requester updated</Th>
+              <Th color={'white'}>Priority</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            <Tr _hover={{
+              background: "gray.900",
+              }}>
+              <Td color={' #BB86FC'}>#175595</Td>
+              <Td>Corruption</Td>
+              <Td>Robert</Td>
+              <Td>21 Mar 2023</Td>
+              <Td color={'yellow.100'}>Normal</Td>
+            </Tr>
+            <Tr _hover={{
+              background: "gray.900",
+              }}>
+              <Td color={' #BB86FC'}>#175846</Td>
+              <Td>Theft</Td>
+              <Td>Sabrina</Td>
+              <Td>22 Mar 2023</Td>
+              <Td color={'red.'}>High</Td>
+            </Tr>
+            <Tr _hover={{
+              background: "gray.900",
+              }}>
+              <Td color={' #BB86FC'}>#175946</Td>
+              <Td>Assault</Td>
+              <Td>George</Td>
+              <Td>23 Mar 2023</Td>
+              <Td color={'orange.400'}>Medium</Td>
+            </Tr>
+            <Tr _hover={{
+              background: "gray.900",
+              }}>
+              <Td color={' #BB86FC'}>#175595</Td>
+              <Td>Corruption</Td>
+              <Td>Robert</Td>
+              <Td>21 Mar 2023</Td>
+              <Td color={'yellow.100'}>Normal</Td>
+            </Tr>
+            <Tr _hover={{
+              background: "gray.900",
+              }}>
+              <Td color={' #BB86FC'}>#175846</Td>
+              <Td>Theft</Td>
+              <Td>Sabrina</Td>
+              <Td>22 Mar 2023</Td>
+              <Td color={'red.'}>High</Td>
+            </Tr>
+            <Tr _hover={{
+              background: "gray.900",
+              }}>
+              <Td color={' #BB86FC'}>#175946</Td>
+              <Td>Assault</Td>
+              <Td>George</Td>
+              <Td>23 Mar 2023</Td>
+              <Td color={'orange.400'}>Medium</Td>
+            </Tr>
+            <Tr _hover={{
+              background: "gray.900",
+              }}>
+              <Td color={' #BB86FC'}>#175595</Td>
+              <Td>Corruption</Td>
+              <Td>Robert</Td>
+              <Td>21 Mar 2023</Td>
+              <Td color={'yellow.100'}>Normal</Td>
+            </Tr>
+            <Tr _hover={{
+              background: "gray.900",
+              }}>
+              <Td color={' #BB86FC'}>#175846</Td>
+              <Td>Theft</Td>
+              <Td>Sabrina</Td>
+              <Td>22 Mar 2023</Td>
+              <Td color={'red.'}>High</Td>
+            </Tr>
+            <Tr _hover={{
+              background: "gray.900",
+              }}>
+              <Td color={' #BB86FC'}>#175946</Td>
+              <Td>Assault</Td>
+              <Td>George</Td>
+              <Td>23 Mar 2023</Td>
+              <Td color={'orange.400'}>Medium</Td>
+            </Tr>
+            <Tr _hover={{
+              background: "gray.900",
+              }}>
+              <Td color={' #BB86FC'}>#175595</Td>
+              <Td>Corruption</Td>
+              <Td>Robert</Td>
+              <Td>21 Mar 2023</Td>
+              <Td color={'yellow.100'}>Normal</Td>
+            </Tr>
+            <Tr _hover={{
+              background: "gray.900",
+              }}>
+              <Td color={' #BB86FC'}>#175846</Td>
+              <Td>Theft</Td>
+              <Td>Sabrina</Td>
+              <Td>22 Mar 2023</Td>
+              <Td color={'red.'}>High</Td>
+            </Tr>
+            <Tr _hover={{
+              background: "gray.900",
+              }}>
+              <Td color={' #BB86FC'}>#175946</Td>
+              <Td>Assault</Td>
+              <Td>George</Td>
+              <Td>23 Mar 2023</Td>
+              <Td color={'orange.400'}>Medium</Td>
+            </Tr>
+          </Tbody>
+        </Table>
+      </TableContainer>
+    </Box>
   );
 };

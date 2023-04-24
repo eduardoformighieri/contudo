@@ -1,12 +1,18 @@
 import { Box, Divider, Flex, Text } from '@chakra-ui/react';
 
 
-export const ReportDetail = () => {
+export const ReportDetailEmployee = () => {
   return (
-      <Box bg='#121212'   borderRadius="8px" h={'350px'} w={'100%'}>
+      <Box bg='#121212' borderRadius="8px" h={'420px'} w={'100%'}>
         <Text px={6} py={4}>Report detail</Text>
         <Divider borderColor="gray.100" />
         <Flex flexDirection="column" gap={8} p={6}>
+          <Box>
+            <Text color="#BB86FC">Status</Text>
+            <Text>
+              Open
+            </Text>
+          </Box>
           <Box>
             <Text color="#BB86FC">Requester</Text>
             <Text>Anonym</Text>
