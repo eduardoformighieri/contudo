@@ -1,14 +1,14 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Manage } from './routes/Manage';
-import { Home } from './routes/Home';
+import { Overview } from './routes/Overview';
 import { Reports } from './routes/Reports';
 import { Report } from './routes/Report';
 
 export const AdminRoutes = () => (
   <Routes>
-    <Route index element={<Home />} />
-    <Route path="/manage" element={<Manage />} />
+    <Route index element={<Overview />} />
     <Route path="/reports" element={<Reports />} />
+    <Route path="/manage" element={<Manage />} />
     <Route path="/report/:reportId" element={<Report />} />
   </Routes>
 );

@@ -50,7 +50,7 @@ export const Home = () => {
                 size="lg"
                 w={'350px'}
                 leftIcon={<MdCheckCircle />}
-                bg="#BB86FC"
+                bg="purple.300"
                 variant="solid"
                 _hover={{
                   background: '#9759e3',
@@ -62,7 +62,7 @@ export const Home = () => {
               size="lg"
               w={'100%'}
               leftIcon={<MdLibraryAdd />}
-              bg="#BB86FC"
+              bg="purple.300"
               variant="solid"
               _hover={{
                 background: '#9759e3',

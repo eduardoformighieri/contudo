@@ -14,10 +14,10 @@ import {
 
 export const ReportTable = () => {
   return (
-    <Box border={1} margin={10} bg='#121212'  borderRadius={10} mt={'50px'}>
+    <Box border={1} margin={10} bg="#121212" borderRadius={10} mt={'50px'}>
       <TableContainer>
         <Table variant="simple">
-        <TableCaption>15 Total tickets</TableCaption>
+          <TableCaption>15 Total tickets</TableCaption>
           <Thead>
             <Tr>
               <Th color={'white'}>ID</Th>
@@ -28,109 +28,121 @@ export const ReportTable = () => {
             </Tr>
           </Thead>
           <Tbody>
-            <Tr _hover={{
-              background: "gray.900",
+            <Tr
+              _hover={{
+                background: 'gray.900',
               }}>
-              <Td color={' #BB86FC'}>#175595</Td>
+              <Td color={' purple.300'}>#175595</Td>
               <Td>Corruption</Td>
               <Td>Robert</Td>
               <Td>21 Mar 2023</Td>
               <Td color={'yellow.100'}>Normal</Td>
             </Tr>
-            <Tr _hover={{
-              background: "gray.900",
+            <Tr
+              _hover={{
+                background: 'gray.900',
               }}>
-              <Td color={' #BB86FC'}>#175846</Td>
+              <Td color={' purple.300'}>#175846</Td>
               <Td>Theft</Td>
               <Td>Sabrina</Td>
               <Td>22 Mar 2023</Td>
               <Td color={'red.'}>High</Td>
             </Tr>
-            <Tr _hover={{
-              background: "gray.900",
+            <Tr
+              _hover={{
+                background: 'gray.900',
               }}>
-              <Td color={' #BB86FC'}>#175946</Td>
+              <Td color={' purple.300'}>#175946</Td>
               <Td>Assault</Td>
               <Td>George</Td>
               <Td>23 Mar 2023</Td>
               <Td color={'orange.400'}>Medium</Td>
             </Tr>
-            <Tr _hover={{
-              background: "gray.900",
+            <Tr
+              _hover={{
+                background: 'gray.900',
               }}>
-              <Td color={' #BB86FC'}>#175595</Td>
+              <Td color={' purple.300'}>#175595</Td>
               <Td>Corruption</Td>
               <Td>Robert</Td>
               <Td>21 Mar 2023</Td>
               <Td color={'yellow.100'}>Normal</Td>
             </Tr>
-            <Tr _hover={{
-              background: "gray.900",
+            <Tr
+              _hover={{
+                background: 'gray.900',
               }}>
-              <Td color={' #BB86FC'}>#175846</Td>
+              <Td color={' purple.300'}>#175846</Td>
               <Td>Theft</Td>
               <Td>Sabrina</Td>
               <Td>22 Mar 2023</Td>
               <Td color={'red.'}>High</Td>
             </Tr>
-            <Tr _hover={{
-              background: "gray.900",
+            <Tr
+              _hover={{
+                background: 'gray.900',
               }}>
-              <Td color={' #BB86FC'}>#175946</Td>
+              <Td color={' purple.300'}>#175946</Td>
               <Td>Assault</Td>
               <Td>George</Td>
               <Td>23 Mar 2023</Td>
               <Td color={'orange.400'}>Medium</Td>
             </Tr>
-            <Tr _hover={{
-              background: "gray.900",
+            <Tr
+              _hover={{
+                background: 'gray.900',
               }}>
-              <Td color={' #BB86FC'}>#175595</Td>
+              <Td color={' purple.300'}>#175595</Td>
               <Td>Corruption</Td>
               <Td>Robert</Td>
               <Td>21 Mar 2023</Td>
               <Td color={'yellow.100'}>Normal</Td>
             </Tr>
-            <Tr _hover={{
-              background: "gray.900",
+            <Tr
+              _hover={{
+                background: 'gray.900',
               }}>
-              <Td color={' #BB86FC'}>#175846</Td>
+              <Td color={' purple.300'}>#175846</Td>
               <Td>Theft</Td>
               <Td>Sabrina</Td>
               <Td>22 Mar 2023</Td>
               <Td color={'red.'}>High</Td>
             </Tr>
-            <Tr _hover={{
-              background: "gray.900",
+            <Tr
+              _hover={{
+                background: 'gray.900',
               }}>
-              <Td color={' #BB86FC'}>#175946</Td>
+              <Td color={' purple.300'}>#175946</Td>
               <Td>Assault</Td>
               <Td>George</Td>
               <Td>23 Mar 2023</Td>
               <Td color={'orange.400'}>Medium</Td>
             </Tr>
-            <Tr _hover={{
-              background: "gray.900",
+            <Tr
+              _hover={{
+                background: 'gray.900',
               }}>
-              <Td color={' #BB86FC'}>#175595</Td>
+              <Td color={' purple.300'}>#175595</Td>
               <Td>Corruption</Td>
               <Td>Robert</Td>
               <Td>21 Mar 2023</Td>
               <Td color={'yellow.100'}>Normal</Td>
             </Tr>
-            <Tr _hover={{
-              background: "gray.900",
+            <Tr
+              _hover={{
+                background: 'gray.900',
               }}>
-              <Td color={' #BB86FC'}>#175846</Td>
+              <Td color={' purple.300'}>#175846</Td>
               <Td>Theft</Td>
               <Td>Sabrina</Td>
               <Td>22 Mar 2023</Td>
               <Td color={'red.'}>High</Td>
             </Tr>
-            <Tr _hover={{
-              background: "gray.900",
+            <Tr
+              _hover={{
+                background: 'gray.900',
               }}>
-              <Td color={' #BB86FC'}>#175946</Td>
+              <Td color={' purple.300'}>#175946</Td>
               <Td>Assault</Td>
               <Td>George</Td>
               <Td>23 Mar 2023</Td>

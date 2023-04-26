@@ -25,7 +25,7 @@ export const UpdatePassword = () => {
           <Button
             size="lg"
             w="350px"
-            bg="#BB86FC"
+            bg="purple.300"
             variant="solid"
             _hover={{
               background: '#9759e3',

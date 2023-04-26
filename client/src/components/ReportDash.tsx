@@ -14,14 +14,16 @@ import {
 
 export const ReportDash = () => {
   return (
-    <Box bg='#121212'  borderRadius={10} mt={10} color={'white'}>
+    <Box bg="#121212" borderRadius={10} mt={10} color={'white'}>
       <Box bg="#121212" borderRadius={10}>
-      <Text px={6} py={4}>Tickets that demand attention</Text>
-      <Divider borderColor="white" />
+        <Text px={6} py={4}>
+          Tickets that demand attention
+        </Text>
+        <Divider borderColor="white" />
       </Box>
       <TableContainer>
         <Table variant="simple">
-        <TableCaption>3 Total tickets</TableCaption>
+          <TableCaption>3 Total tickets</TableCaption>
           <Thead>
             <Tr>
               <Th color={'white'}>ID</Th>
@@ -33,30 +35,33 @@ export const ReportDash = () => {
             </Tr>
           </Thead>
           <Tbody>
-            <Tr _hover={{
-              background: "gray.900",
+            <Tr
+              _hover={{
+                background: 'gray.900',
               }}>
-              <Td color={'#BB86FC'}>#175595</Td>
+              <Td color={'purple.300'}>#175595</Td>
               <Td>Corruption</Td>
               <Td>Robert</Td>
               <Td>21 Mar 2023</Td>
               <Td color={'yellow.100'}>Normal</Td>
               <Td>Admin</Td>
             </Tr>
-            <Tr _hover={{
-              background: "gray.900",
+            <Tr
+              _hover={{
+                background: 'gray.900',
               }}>
-              <Td color={'#BB86FC'}>#175846</Td>
+              <Td color={'purple.300'}>#175846</Td>
               <Td>Theft</Td>
               <Td>Sabrina</Td>
               <Td>22 Mar 2023</Td>
               <Td color={'red.400'}>High</Td>
               <Td>Admin</Td>
             </Tr>
-            <Tr _hover={{
-              background: "gray.900",
+            <Tr
+              _hover={{
+                background: 'gray.900',
               }}>
-              <Td color={'#BB86FC'}>#175946</Td>
+              <Td color={'purple.300'}>#175946</Td>
               <Td>Assault</Td>
               <Td>George</Td>
               <Td>23 Mar 2023</Td>
