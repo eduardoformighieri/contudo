@@ -1,16 +1,7 @@
-import { Box, Center } from '@chakra-ui/react';
-import { List } from '@chakra-ui/react';
+import { Box, Center, List } from '@chakra-ui/react';
 
-import { IconButton } from '@chakra-ui/react';
-import {
-  MdSpaceDashboard,
-  MdHome,
-  MdPerson,
-  MdOutlineVerticalShadesClosed,
-} from 'react-icons/md';
-import { useLocation, useNavigate, Link } from 'react-router-dom';
-
-// The default icon size is 1em (16px)
+import { MdHome, MdPerson, MdSpaceDashboard } from 'react-icons/md';
+import { Link, useLocation } from 'react-router-dom';
 
 export const Nav = () => {
   const { pathname } = useLocation();
