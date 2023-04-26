@@ -2,11 +2,19 @@ import { Flex, Text } from '@chakra-ui/react';
 import { IconButton } from '@chakra-ui/react';
 
 import { BsArrowLeft } from 'react-icons/bs';
+import { Link, useNavigate } from 'react-router-dom';
 
-export const Header = () => {
+interface HeaderProps {
+  reportId?: string;
+}
+
+export const Header = ({ reportId }: HeaderProps) => {
+  const navigate = useNavigate();
+
   return (
     <Flex bg="#121212" alignItems={'center'} textAlign={'center'} h={16}>
       <IconButton
+        onClick={() => navigate(-1)}
         color="white"
         aria-label=""
         fontSize="28px"
@@ -18,7 +26,7 @@ export const Header = () => {
         bg="#121212"
       />
       <Text fontSize={'28px'} ml={5}>
-        #165232
+        {reportId ?? '#165232'}
       </Text>
     </Flex>
   );

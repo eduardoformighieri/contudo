@@ -9,7 +9,7 @@ import {
   Spacer,
   InputLeftElement,
 } from '@chakra-ui/react';
-import { ReportTable } from '../../../components/ReportTable';
+import { ReportsTable } from '../../../components/ReportsTable';
 import { Nav } from '../../../components/Nav';
 import { SearchIcon } from '@chakra-ui/icons';
 import { MdLibraryAdd } from 'react-icons/md';
@@ -45,7 +45,7 @@ export const Reports = () => {
 
             <Button
               as={Link}
-              to="/guest/create-report"
+              to="/report-system/create-report"
               target="_blank"
               rel="noopener noreferrer"
               bg="purple.300"
@@ -61,7 +61,7 @@ export const Reports = () => {
             </Button>
           </Flex>
         </Box>
-        <ReportTable />
+        <ReportsTable />
       </Flex>
     </Flex>
   );

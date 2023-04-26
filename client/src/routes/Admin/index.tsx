@@ -9,6 +9,6 @@ export const AdminRoutes = () => (
     <Route index element={<Overview />} />
     <Route path="/reports" element={<Reports />} />
     <Route path="/manage" element={<Manage />} />
-    <Route path="/report/:reportId" element={<Report />} />
+    <Route path="/reports/:reportId" element={<Report />} />
   </Routes>
 );

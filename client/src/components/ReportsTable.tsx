@@ -12,7 +12,7 @@ import {
   Tr,
 } from '@chakra-ui/react';
 
-export const ReportTable = () => {
+export const ReportsTable = () => {
   return (
     <Box border={1} margin={10} bg="#121212" borderRadius={10} mt={'50px'}>
       <TableContainer>

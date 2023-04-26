@@ -1,7 +1,10 @@
 import { Button, Center, Flex, Text, Input } from '@chakra-ui/react';
+import { useState } from 'react';
 import { MdLibraryAdd, MdCheckCircle } from 'react-icons/md';
+import { Link, useNavigate } from 'react-router-dom';
 
 export const Home = () => {
+  const [reportId, setReportId] = useState('');
   return (
     <Flex
       bg={'black'}
@@ -42,11 +45,15 @@ export const Home = () => {
           <Flex flexDirection={'column'} gap={10} mb={10} alignItems={'center'}>
             <Flex gap={10}>
               <Input
+                value={reportId}
+                onChange={(event: any) => setReportId(event.target.value)}
                 h={'48px'}
                 size="lg"
                 w={'350px'}
                 placeholder="Search for ticket #"></Input>
               <Button
+                as={Link}
+                to={`report/${reportId}`}
                 size="lg"
                 w={'350px'}
                 leftIcon={<MdCheckCircle />}
@@ -59,6 +66,10 @@ export const Home = () => {
               </Button>
             </Flex>
             <Button
+              as={Link}
+              to="/report-system/create-report"
+              target="_blank"
+              rel="noopener noreferrer"
               size="lg"
               w={'100%'}
               leftIcon={<MdLibraryAdd />}

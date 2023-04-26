@@ -3,7 +3,7 @@ import { Home } from './routes/Home';
 import { CreateReport } from './routes/CreateReport';
 import { Report } from './routes/Report';
 
-export const GuestRoutes = () => (
+export const ReportSystemRoutes = () => (
   <Routes>
     <Route index element={<Home />} />
     <Route path="/report/:reportId" element={<Report />} />
