@@ -59,6 +59,14 @@ export class AdminsController {
     return this.adminsService.create(createAdminDto);
   }
 
+  @Post()
+  @ApiOperation({ summary: 'Resend First Access email to crated Admin' })
+  @UseGuards(RolesGuard)
+  @Roles(Role.Leader, Role.Coleader)
+  async resendFirstAccess(@Body() email: string): Promise<{ message: string }> {
+    return this.adminsService.resendFirstAccess(email);
+  }
+
   @Patch('/admin/:id')
   @ApiOperation({ summary: 'Update other Admin' })
   @UseGuards(HierarchyGuard, RolesGuard)

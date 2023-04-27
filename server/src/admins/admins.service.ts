@@ -119,12 +119,33 @@ export class AdminsService {
       {
         sub: admin.id,
       },
-      { secret: process.env.JWT_SECRET },
+      { secret: process.env.FIRST_ACCESS_JWT_SECRET },
     );
 
     await this.emailService.sendFirstAccess(email, token);
 
     return new AdminWithRoleDto(admin);
+  }
+
+  async resendFirstAccess(email: string): Promise<{ message: string }> {
+    const admin = await this.prisma.admin.findUnique({
+      where: { email },
+    });
+
+    if (!admin) {
+      throw new NotFoundException('Admin not found');
+    }
+
+    const newToken = await this.jwtService.sign(
+      {
+        sub: admin.id,
+      },
+      { secret: process.env.FIRST_ACCESS_JWT_SECRET },
+    );
+
+    await this.emailService.sendFirstAccess(email, newToken);
+
+    return { message: 'New first access send' };
   }
 
   async update(params: {

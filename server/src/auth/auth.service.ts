@@ -53,7 +53,7 @@ export class AuthService {
       throw new NotFoundException('Admin not found');
     }
 
-    if (!admin.isFirstAccess) {
+    if (!admin.is_first_access) {
       throw new ConflictException('First access already done');
     }
 
@@ -63,7 +63,7 @@ export class AuthService {
       where: { id: adminId },
       data: {
         password: hashPassword,
-        isFirstAccess: false,
+        is_first_access: false,
       },
     });
 

@@ -4,13 +4,18 @@ import { ChakraProvider } from '@chakra-ui/react';
 
 import { BrowserRouter, RouterProvider } from 'react-router-dom';
 import { RootRoutes } from './routes';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <ChakraProvider>
-      <BrowserRouter>
-        <RootRoutes />
-      </BrowserRouter>
-    </ChakraProvider>
+    <QueryClientProvider client={queryClient}>
+      <ChakraProvider>
+        <BrowserRouter>
+          <RootRoutes />
+        </BrowserRouter>
+      </ChakraProvider>
+    </QueryClientProvider>
   </React.StrictMode>
 );

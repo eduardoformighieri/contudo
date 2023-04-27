@@ -13,15 +13,51 @@ import { Link as ReactRouterLink, useNavigate } from 'react-router-dom';
 import { Input, InputGroup } from '@chakra-ui/react';
 import { MdEmail, MdLock } from 'react-icons/md';
 import { useState } from 'react';
+import { useMutation } from 'react-query';
+import { signIn } from '../../../api/auth';
+import { useToast } from '@chakra-ui/react';
+import { AxiosError } from 'axios';
+import { setToken } from '../../../utils/tokenStorage';
 
 export const SignIn = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const toast = useToast();
+
+  const { isLoading, mutate } = useMutation(() => signIn({ email, password }), {
+    onError: (error: AxiosError<{ message: string }>) => {
+      if (error?.response?.data?.message) {
+        toast({
+          title: error.response.data.message,
+          position: 'top-right',
+          isClosable: true,
+          status: 'error',
+        });
+      } else {
+        toast({
+          title: 'Unknown error',
+          position: 'top-right',
+          isClosable: true,
+          status: 'error',
+        });
+      }
+    },
+    onSuccess: (data) => {
+      toast({
+        title: 'You logged',
+        position: 'top-right',
+        isClosable: true,
+        status: 'success',
+      });
+      console.log(data);
+      setToken(data.access_token);
+      navigate('/admin');
+    },
+  });
 
   const handleSubmit = () => {
-    //TODO: login
-    navigate('/admin');
+    mutate();
   };
 
   return (
@@ -86,6 +122,7 @@ export const SignIn = () => {
             </Link>
           </Flex>
           <Button
+            isLoading={isLoading}
             onClick={handleSubmit}
             size="lg"
             w="350px"
