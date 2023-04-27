@@ -6,13 +6,42 @@ import {
   TableContainer,
   Tbody,
   Td,
-  Tfoot,
+  Text,
   Th,
   Thead,
   Tr,
 } from '@chakra-ui/react';
+import { useQuery } from 'react-query';
+import { getAllReports } from '../api/reports';
+import { Spinner } from '@chakra-ui/react';
+import { useState } from 'react';
 
 export const ReportsTable = () => {
+  const [page, setPage] = useState(1);
+  const { isLoading, isError, data, error } = useQuery<any, Error>(
+    ['reports', page],
+    () => getAllReports(page)
+  );
+  console.log(data);
+  if (isLoading) {
+    return (
+      <Flex w="100%" justifyContent="center" py={4}>
+        <Spinner size="xl" />
+      </Flex>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Flex w="100%" justifyContent="center" py={4}>
+        <Text color="#0F1010" fontSize="2xl">
+          Error info:
+        </Text>
+        <Text mt={2}>{error?.message}</Text>
+      </Flex>
+    );
+  }
+
   return (
     <Box border={1} margin={10} bg="#121212" borderRadius={10} mt={'50px'}>
       <TableContainer>
@@ -28,16 +57,19 @@ export const ReportsTable = () => {
             </Tr>
           </Thead>
           <Tbody>
-            <Tr
-              _hover={{
-                background: 'gray.900',
-              }}>
-              <Td color={' purple.300'}>#175595</Td>
-              <Td>Corruption</Td>
-              <Td>Robert</Td>
-              <Td>21 Mar 2023</Td>
-              <Td color={'yellow.100'}>Normal</Td>
-            </Tr>
+            {/* {data?.payload.map((report: any) => (
+              <Tr
+                _hover={{
+                  background: 'gray.900',
+                }}>
+                <Td color={' purple.300'}>#175595</Td>
+                <Td>Corruption</Td>
+                <Td>Robert</Td>
+                <Td>21 Mar 2023</Td>
+                <Td color={'yellow.100'}>Normal</Td>
+              </Tr>
+            ))} */}
+
             <Tr
               _hover={{
                 background: 'gray.900',

@@ -50,7 +50,7 @@ export const SignIn = () => {
         isClosable: true,
         status: 'success',
       });
-      console.log(data);
+
       setToken(data.access_token);
       navigate('/admin');
     },
