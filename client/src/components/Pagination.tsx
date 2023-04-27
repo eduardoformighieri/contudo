@@ -60,7 +60,7 @@ export const Pagination = ({
       borderRadius={8}
       key={`current-users-page${currentPage}`}
       size="xs"
-      color="white"
+      color="black"
       cursor="default">
       {currentPage}
     </Button>
@@ -68,6 +68,7 @@ export const Pagination = ({
 
   const renderOtherPages = (page: number) => (
     <Button
+      _hover={{ color: 'black', bg: 'gray.100' }}
       variant="ghost"
       px={3}
       py="2px"
@@ -75,7 +76,6 @@ export const Pagination = ({
       key={`page ${page}`}
       id={`${page}`}
       size="xs"
-      color="gray.800"
       onClick={() => changeCurrentPage(page)}>
       {page}
     </Button>
@@ -88,9 +88,9 @@ export const Pagination = ({
       justify="space-between"
       flexDirection={['column', 'row']}>
       <Text color="gray.300" fontSize="sm">
-        Exibindo {currentPage === lastPage ? total : currentPage * perPage}{' '}
-        resultado
-        {total > 1 ? 's' : null} de {total}
+        Showing {currentPage === lastPage ? total : currentPage * perPage}{' '}
+        result
+        {total > 1 ? 's' : null} of {total}
       </Text>
 
       <HStack

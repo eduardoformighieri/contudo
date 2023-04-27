@@ -82,7 +82,9 @@ export const CreateReportForm = () => {
   >(['report-categories'], () => getAllCategories());
 
   useEffect(() => {
-    setCategory(categories[0].id);
+    if (categories?.length > 0) {
+      setCategory(categories[0]?.id);
+    }
   }, [categories]);
 
   return (
