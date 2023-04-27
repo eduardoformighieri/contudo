@@ -5,10 +5,10 @@ import { BsArrowLeft } from 'react-icons/bs';
 import { Link, useNavigate } from 'react-router-dom';
 
 interface HeaderProps {
-  reportId?: string;
+  title?: string;
 }
 
-export const Header = ({ reportId }: HeaderProps) => {
+export const Header = ({ title }: HeaderProps) => {
   const navigate = useNavigate();
 
   return (
@@ -26,7 +26,7 @@ export const Header = ({ reportId }: HeaderProps) => {
         bg="#121212"
       />
       <Text fontSize={'28px'} ml={5}>
-        {reportId ?? '#165232'}
+        {title ?? '...'}
       </Text>
     </Flex>
   );

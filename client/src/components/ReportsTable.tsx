@@ -17,14 +17,16 @@ import { Spinner } from '@chakra-ui/react';
 import { useState } from 'react';
 import { Pagination } from './Pagination';
 import { dateFormatter } from '../utils/dateFormatter';
+import { useNavigate } from 'react-router-dom';
 
 export const ReportsTable = () => {
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const { isLoading, isError, data, error } = useQuery<any, Error>(
     ['reports', page],
     () => getAllReports(page)
   );
-  console.log(data);
+
   if (isLoading) {
     return (
       <Flex w="100%" justifyContent="center" py={4}>
@@ -60,6 +62,9 @@ export const ReportsTable = () => {
           <Tbody>
             {data?.payload.map((report: any) => (
               <Tr
+                key={report?.id}
+                cursor="pointer"
+                onClick={() => navigate(`${report?.id}`)}
                 _hover={{
                   background: 'gray.900',
                 }}>
