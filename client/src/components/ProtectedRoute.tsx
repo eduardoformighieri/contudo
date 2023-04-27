@@ -6,7 +6,7 @@ import { getToken } from '../utils/tokenStorage';
 
 export const ProtectedRoute = () => {
   const { setAdmin } = useAuth();
-  const { data, isError } = useQuery(
+  const { isError } = useQuery(
     ['admin', getToken()],
     () => getLoggedUserData(getToken()),
     {
