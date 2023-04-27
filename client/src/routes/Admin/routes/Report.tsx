@@ -58,7 +58,7 @@ export const Report = () => {
               <Box>
                 <Text color="purple.300">Priority</Text>
                 <Flex alignItems={'center'} textAlign={'center'}>
-                  <Text color={'#CF6679'}>{data?.priority}</Text>
+                  <Text>{data?.priority ?? 'None'}</Text>
                 </Flex>
               </Box>
               <Divider borderColor="gray.100" />

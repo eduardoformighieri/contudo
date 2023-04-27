@@ -1,7 +1,7 @@
 import { Flex, Center } from '@chakra-ui/react';
 import { Nav } from '../../../components/Nav';
-import { ProfileTable } from '../../../components/ProfileTable';
-import { Users } from '../../../components/Users';
+import { MyProfileBox } from '../../../components/MyProfileBox';
+import { UsersTable } from '../../../components/UsersTable';
 
 export const Manage = () => {
   return (
@@ -14,8 +14,8 @@ export const Manage = () => {
         justifyContent={'center'}>
         <Center>
           <Flex w={'100%'} gap={'24'}>
-            <ProfileTable />
-            <Users />
+            <MyProfileBox />
+            <UsersTable />
           </Flex>
         </Center>
       </Flex>
