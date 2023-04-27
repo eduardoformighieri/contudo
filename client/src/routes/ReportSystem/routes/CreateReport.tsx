@@ -1,5 +1,5 @@
 import { Center, Flex } from '@chakra-ui/react';
-import { FormTable } from '../../../components/FormTable';
+import { CreateReportForm } from '../../../components/CreateReportForm';
 
 export const CreateReport = () => {
   return (
@@ -11,7 +11,7 @@ export const CreateReport = () => {
       alignContent={'center'}
       justifyContent={'center'}>
       <Center>
-        <FormTable />
+        <CreateReportForm />
       </Center>
     </Flex>
   );

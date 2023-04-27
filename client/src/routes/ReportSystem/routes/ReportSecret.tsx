@@ -1,6 +1,9 @@
 import { Box, Button, Center, Flex, Text } from '@chakra-ui/react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export const ReportSecret = () => {
+  const { secretKey } = useParams<{ secretKey: string }>();
+  const navigate = useNavigate();
   return (
     <Flex
       bg={'black'}
@@ -33,7 +36,7 @@ export const ReportSecret = () => {
             borderRadius={5}>
             <Box border="1px" w={'350px'} borderRadius={5}>
               <Text color={'#BB86FC'} fontSize={32} p={3}>
-                #287493
+                {secretKey}
               </Text>
             </Box>
             <Text fontSize={16}>
@@ -42,6 +45,7 @@ export const ReportSecret = () => {
             </Text>
           </Flex>
           <Button
+            onClick={() => navigate(-1)}
             size="lg"
             w={'350px'}
             bg="#BB86FC"

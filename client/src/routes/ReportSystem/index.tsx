@@ -9,6 +9,6 @@ export const ReportSystemRoutes = () => (
     <Route index element={<Home />} />
     <Route path="/report/:reportId" element={<Report />} />
     <Route path="/create-report" element={<CreateReport />} />
-    <Route path="/report-secret" element={<ReportSecret />} />
+    <Route path="/report-secret/:secretKey" element={<ReportSecret />} />
   </Routes>
 );
