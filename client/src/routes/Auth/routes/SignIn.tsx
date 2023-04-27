@@ -110,16 +110,27 @@ export const SignIn = () => {
                 </InputGroup>
               </Stack>
             </Box>
+            <Flex justifyContent={'space-between'}>
+              <Link
+                textAlign="left"
+                as={ReactRouterLink}
+                to="forgot-password"
+                color="blue.200"
+                cursor="pointer"
+                fontSize={14}>
+                Forgot your password?
+              </Link>
 
-            <Link
-              textAlign="left"
-              as={ReactRouterLink}
-              to="forgot-password"
-              color="blue.200"
-              cursor="pointer"
-              fontSize={14}>
-              Forgot your password?
-            </Link>
+              <Link
+                textAlign="left"
+                as={ReactRouterLink}
+                to="/report-system"
+                color="blue.200"
+                cursor="pointer"
+                fontSize={14}>
+                Visit Report System
+              </Link>
+            </Flex>
           </Flex>
           <Button
             isLoading={isLoading}
