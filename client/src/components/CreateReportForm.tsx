@@ -164,29 +164,17 @@ export const CreateReportForm = () => {
                 </Box>
               </Flex>
 
-              <Flex alignItems={'center'} justifyContent={'space-between'}>
-                <Button
-                  mt={4}
-                  bg="#CF6679"
-                  w={'240px'}
-                  _hover={{
-                    background: '#c43952',
-                  }}>
-                  Cancel
-                </Button>
-                <Spacer />
-                <Button
-                  onClick={handleSubmit}
-                  mt={4}
-                  bg="purple.300"
-                  type="submit"
-                  w={'240px'}
-                  _hover={{
-                    background: '#9759e3',
-                  }}>
-                  Submit
-                </Button>
-              </Flex>
+              <Button
+                onClick={handleSubmit}
+                mt={4}
+                bg="purple.300"
+                type="submit"
+                w="100%"
+                _hover={{
+                  background: '#9759e3',
+                }}>
+                Submit
+              </Button>
             </Flex>
           </FormControl>
         </Flex>
