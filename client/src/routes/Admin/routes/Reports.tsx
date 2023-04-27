@@ -26,7 +26,7 @@ export const Reports = () => {
             Reports Inbox
           </Text>
           <Flex>
-            <Stack spacing={6} w={'250px'} marginLeft={10}>
+            {/* <Stack spacing={6} w={'250px'} marginLeft={10}>
               <InputGroup>
                 <InputLeftElement
                   pointerEvents="none"
@@ -40,7 +40,7 @@ export const Reports = () => {
                   placeholder="Ticket Number"
                 />
               </InputGroup>
-            </Stack>
+            </Stack> */}
             <Spacer />
 
             <Button
