@@ -14,13 +14,15 @@ import {
   Spacer,
   Checkbox,
   useToast,
+  Link,
 } from '@chakra-ui/react';
 import { AxiosError } from 'axios';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
-import { useNavigate } from 'react-router-dom';
 import { getAllCategories } from '../api/getDataForSelect';
 import { createReport } from '../api/reports';
+import FileUpload from './FileUpload';
+import { Link as ReactRouterLink, useNavigate } from 'react-router-dom';
 
 export const CreateReportForm = () => {
   const toast = useToast();
@@ -161,9 +163,9 @@ export const CreateReportForm = () => {
                   resize={'none'}
                   mt={2}
                 />
-                <Box ml={'310px'}>
-                  <Input type="file" width={'250px'} variant="unstyled"></Input>
-                </Box>
+                {/* <Box ml={'310px'}>
+                  <FileUpload />
+                </Box> */}
               </Flex>
 
               <Button
@@ -179,6 +181,15 @@ export const CreateReportForm = () => {
               </Button>
             </Flex>
           </FormControl>
+          <Link
+            textAlign="left"
+            as={ReactRouterLink}
+            to="/report-system"
+            color="blue.200"
+            cursor="pointer"
+            fontSize={14}>
+            Go to Report home
+          </Link>
         </Flex>
       </Center>
     </Flex>

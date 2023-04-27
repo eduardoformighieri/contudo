@@ -16,3 +16,8 @@ export const createReport = async (report: any) => {
   const { data } = await api.post('/reports/guest', report);
   return data;
 };
+
+export const getReportBySecretKey = async (secretKey: string) => {
+  const { data } = await api.get(`/reports/guest/${secretKey}`);
+  return data;
+};

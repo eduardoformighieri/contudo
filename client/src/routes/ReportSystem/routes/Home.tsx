@@ -67,9 +67,7 @@ export const Home = () => {
             </Flex>
             <Button
               as={Link}
-              to="/report-system/create-report"
-              target="_blank"
-              rel="noopener noreferrer"
+              to="create-report"
               size="lg"
               w={'100%'}
               leftIcon={<MdLibraryAdd />}
