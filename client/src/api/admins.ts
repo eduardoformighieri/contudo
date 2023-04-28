@@ -21,3 +21,21 @@ export const createAdmin = async (form: any) => {
   const { data } = await api.post(`/admins`, form);
   return data;
 };
+
+export const updateOtherAdmin = async (adminId: string, form: any) => {
+  const { data } = await api.patch(`/admins/admin/${adminId}`, form);
+  return data;
+};
+
+export const switchAdminRole = async ({
+  adminId,
+  roleId,
+}: {
+  adminId: string;
+  roleId: string;
+}) => {
+  const { data } = await api.patch(`/admins/roles/admin/${adminId}`, {
+    newRoleId: roleId,
+  });
+  return data;
+};

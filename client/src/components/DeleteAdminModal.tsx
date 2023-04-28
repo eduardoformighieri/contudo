@@ -35,7 +35,7 @@ export const DeleteAdminModal = ({ adminId }: { adminId: string }) => {
 
   return (
     <>
-      <Box as="button" onClick={onOpen}>
+      <Box w="100%" textAlign="left" as="button" onClick={onOpen}>
         Delete
       </Box>
       <Modal isOpen={isOpen} onClose={onClose}>

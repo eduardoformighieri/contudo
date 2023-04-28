@@ -116,7 +116,7 @@ export const UsersTable = () => {
                     />
                     <MenuList bg="#121212">
                       <MenuItem _hover={{ bg: '#404040' }} bg="#121212">
-                        <UpdateAdminModal adminId={admin.id} />
+                        <UpdateAdminModal admin={admin} />
                       </MenuItem>
                       <MenuItem _hover={{ bg: '#404040' }} bg="#121212">
                         <DeleteAdminModal adminId={admin.id} />
