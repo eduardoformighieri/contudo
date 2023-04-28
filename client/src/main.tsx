@@ -6,7 +6,7 @@ import { BrowserRouter, RouterProvider } from 'react-router-dom';
 import { RootRoutes } from './routes';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>

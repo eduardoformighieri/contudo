@@ -30,7 +30,7 @@ export const CreateReportForm = () => {
   const [identity, setIdentity] = useState('');
   const [title, setTitle] = useState('');
   const [isAnonymous, setIsAnonymous] = useState(false);
-  const [category, setCategory] = useState('');
+  const [categoryId, setCategoryId] = useState('');
   const [description, setDescription] = useState('');
   const [attachmentUrls, setAttachmentUrls] = useState([]);
   //TODO: FILE UPLOAD
@@ -39,7 +39,7 @@ export const CreateReportForm = () => {
       createReport({
         guest_identity: isAnonymous ? 'Anonymous' : identity,
         title,
-        categoryId: `${category}`,
+        categoryId: `${categoryId}`,
         description,
       }),
     {
@@ -72,20 +72,18 @@ export const CreateReportForm = () => {
       },
     }
   );
-  console.log(category);
 
   const handleSubmit = () => {
     mutate();
   };
 
-  const { data: categories, isFetching: isFetchingCategories } = useQuery<
-    any,
-    Error
-  >(['report-categories'], () => getAllCategories());
+  const { data: categories } = useQuery<any, Error>(['report-categories'], () =>
+    getAllCategories()
+  );
 
   useEffect(() => {
     if (categories?.length > 0) {
-      setCategory(categories[0]?.id);
+      setCategoryId(categories[0]?.id);
     }
   }, [categories]);
 
@@ -140,8 +138,8 @@ export const CreateReportForm = () => {
               <Box>
                 <FormLabel>Category</FormLabel>
                 <Select
-                  value={category}
-                  onChange={(event: any) => setCategory(event.target.value)}>
+                  value={categoryId}
+                  onChange={(event: any) => setCategoryId(event.target.value)}>
                   {!!categories &&
                     categories.map((category: any) => (
                       <option

@@ -21,3 +21,29 @@ export const getReportBySecretKey = async (secretKey: string) => {
   const { data } = await api.get(`/reports/guest/${secretKey}`);
   return data;
 };
+
+export const updatePriorityByReportId = async ({
+  priorityId,
+  reportId,
+}: {
+  reportId: string;
+  priorityId: string;
+}) => {
+  const { data } = await api.patch(`/reports/${reportId}/priority`, {
+    priorityId,
+  });
+  return data;
+};
+
+export const updateStatusyByReportId = async ({
+  statusId,
+  reportId,
+}: {
+  reportId: string;
+  statusId: string;
+}) => {
+  const { data } = await api.patch(`/reports/${reportId}/status`, {
+    statusId,
+  });
+  return data;
+};

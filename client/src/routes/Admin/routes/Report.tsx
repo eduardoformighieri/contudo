@@ -1,20 +1,66 @@
-import { Flex, Box, Text, Divider } from '@chakra-ui/react';
-import { useQuery } from 'react-query';
+import { Flex, Box, Text, Divider, Select, Button } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { useMutation, useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
-import { getReportById } from '../../../api/reports';
+import {
+  getAllPriorities,
+  getAllStatuses,
+} from '../../../api/getDataForSelect';
+import {
+  getReportById,
+  updatePriorityByReportId,
+  updateStatusyByReportId,
+} from '../../../api/reports';
 import { Header } from '../../../components/Header';
 import { Messages } from '../../../components/Messages';
 import { Nav } from '../../../components/Nav';
-import { dateFormatter } from '../../../utils/dateFormatter';
+import { queryClient } from '../../../main';
+import { dateFormatterWithHH } from '../../../utils/dateFormatter';
 
 export const Report = () => {
   const { reportId } = useParams<{ reportId: string }>();
   const { isLoading, isError, data, error } = useQuery<any, Error>(
-    ['service', reportId],
+    ['AdminReport', reportId],
     () => getReportById(reportId!)
   );
 
-  console.log(data);
+  const [isEditingS, setIsEditingS] = useState(false);
+
+  const [statusId, setStatusId] = useState('');
+
+  const { data: statuses } = useQuery<any, Error>(['report-statuses'], () =>
+    getAllStatuses()
+  );
+
+  const [isEditingP, setIsEditingP] = useState(false);
+
+  const [priorityId, setPriorityId] = useState('');
+
+  const { data: priorities } = useQuery<any, Error>(['report-priorities'], () =>
+    getAllPriorities()
+  );
+
+  const { mutate: mutatePriority } = useMutation(
+    () => updatePriorityByReportId({ reportId: data.id, priorityId }),
+    {
+      onError: () => {},
+      onSuccess: (data) => {
+        queryClient.invalidateQueries(['AdminReport']);
+        setIsEditingP(!isEditingP);
+      },
+    }
+  );
+
+  const { mutate: mutateStatus } = useMutation(
+    () => updateStatusyByReportId({ reportId: data.id, statusId }),
+    {
+      onError: () => {},
+      onSuccess: (data) => {
+        queryClient.invalidateQueries(['AdminReport']);
+        setIsEditingS(!isEditingS);
+      },
+    }
+  );
 
   return (
     <Flex bg="black" color={'white'} h={'100vh'}>
@@ -49,26 +95,98 @@ export const Report = () => {
             <Text px={6} py={4}>
               Report information
             </Text>
+
             <Divider borderColor="gray.100" />
             <Flex flexDirection="column" gap={8} p={6}>
               <Box>
-                <Text color="purple.300">Status</Text>
-                <Text>{data?.status}</Text>
+                <Flex mb={2} alignItems="center">
+                  <Text color="purple.300">Status</Text>{' '}
+                  <Button
+                    size="xs"
+                    colorScheme="blackAlpha"
+                    onClick={() => setIsEditingS(!isEditingS)}>
+                    {isEditingS ? 'Cancel' : 'Edit'}
+                  </Button>
+                  {isEditingS && (
+                    <Button
+                      size="xs"
+                      colorScheme="blackAlpha"
+                      onClick={() => {
+                        mutateStatus();
+                      }}>
+                      Save Changes
+                    </Button>
+                  )}
+                </Flex>
+
+                {isEditingS ? (
+                  <Select
+                    value={statusId}
+                    onChange={(event: any) => setStatusId(event.target.value)}>
+                    {!!statuses &&
+                      statuses.map((status: any, i: number) => (
+                        <option
+                          key={status.id}
+                          value={status.id}
+                          style={{ background: 'black' }}>
+                          {status.name}
+                        </option>
+                      ))}
+                  </Select>
+                ) : (
+                  <Text>{data?.status}</Text>
+                )}
               </Box>
               <Box>
-                <Text color="purple.300">Priority</Text>
+                <Flex mb={2} alignItems="center">
+                  <Text color="purple.300">Priority</Text>{' '}
+                  <Button
+                    size="xs"
+                    colorScheme="blackAlpha"
+                    onClick={() => setIsEditingP(!isEditingP)}>
+                    {isEditingP ? 'Cancel' : 'Edit'}
+                  </Button>
+                  {isEditingP && (
+                    <Button
+                      size="xs"
+                      colorScheme="blackAlpha"
+                      onClick={() => {
+                        mutatePriority();
+                      }}>
+                      Save Changes
+                    </Button>
+                  )}
+                </Flex>
                 <Flex alignItems={'center'} textAlign={'center'}>
-                  <Text>{data?.priority ?? 'None'}</Text>
+                  {isEditingP ? (
+                    <Select
+                      value={priorityId}
+                      onChange={(event: any) =>
+                        setPriorityId(event.target.value)
+                      }>
+                      {!!priorities &&
+                        priorities.map((priority: any, i: number) => (
+                          <option
+                            key={priority.id}
+                            value={priority.id}
+                            style={{ background: 'black' }}>
+                            {priority.name}
+                          </option>
+                        ))}
+                    </Select>
+                  ) : (
+                    <Text>{data?.priority ?? 'None'}</Text>
+                  )}
                 </Flex>
               </Box>
               <Divider borderColor="gray.100" />
               <Box>
                 <Text color="purple.300">Date created</Text>
-                <Text>{dateFormatter(data?.created_at)}</Text>
+                <Text>{dateFormatterWithHH(data?.created_at)}</Text>
               </Box>
               <Box>
                 <Text color="purple.300">Last update</Text>
-                <Text>{dateFormatter(data?.updated_at)}</Text>
+                <Text>{dateFormatterWithHH(data?.updated_at)}</Text>
               </Box>
               <Divider borderColor="gray.100" />
             </Flex>
