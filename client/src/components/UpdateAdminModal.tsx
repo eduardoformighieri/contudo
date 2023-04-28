@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react';
 import { MdEmail, MdLock, MdPerson } from 'react-icons/md';
 
-export const UpdateAdminModal = () => {
+export const UpdateAdminModal = ({ adminId }: { adminId: string }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>

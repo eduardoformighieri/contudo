@@ -11,3 +11,8 @@ export const updateSelf = async (dataToUpdate: any) => {
   const { data } = await api.patch('/admins/me', dataToUpdate);
   return data;
 };
+
+export const deleteAdminById = async (adminId: string) => {
+  const { data } = await api.delete(`/admins/admin/${adminId}`);
+  return data;
+};

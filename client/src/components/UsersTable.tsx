@@ -41,7 +41,7 @@ import { UpdateAdminModal } from './UpdateAdminModal';
 export const UsersTable = () => {
   const [page, setPage] = useState(1);
   const { isLoading, isError, data, error } = useQuery<any, Error>(
-    ['reports', page],
+    ['adminsTable', page],
     () => getAllAdmins(page)
   );
 
@@ -116,10 +116,10 @@ export const UsersTable = () => {
                     />
                     <MenuList bg="#121212">
                       <MenuItem _hover={{ bg: '#404040' }} bg="#121212">
-                        <UpdateAdminModal />
+                        <UpdateAdminModal adminId={admin.id} />
                       </MenuItem>
                       <MenuItem _hover={{ bg: '#404040' }} bg="#121212">
-                        <DeleteAdminModal />
+                        <DeleteAdminModal adminId={admin.id} />
                       </MenuItem>
                     </MenuList>
                   </Menu>

@@ -19,9 +19,20 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { MdEmail, MdLock, MdPerson } from 'react-icons/md';
+import { useMutation } from 'react-query';
+import { deleteAdminById } from '../api/admins';
+import { queryClient } from '../main';
 
-export const DeleteAdminModal = () => {
+export const DeleteAdminModal = ({ adminId }: { adminId: string }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const { mutate } = useMutation(() => deleteAdminById(adminId), {
+    onError: () => {},
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(['adminsTable']);
+    },
+  });
+
   return (
     <>
       <Box as="button" onClick={onOpen}>
@@ -43,6 +54,7 @@ export const DeleteAdminModal = () => {
 
           <ModalFooter>
             <Button
+              onClick={() => mutate()}
               color={'white'}
               bg="#ff0000cf"
               size="md"
