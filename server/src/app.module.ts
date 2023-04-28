@@ -7,7 +7,7 @@ import { AdminsModule } from './admins/admins.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { ReportCategoriesModule } from './report-categories/report-categories.module';
-import { ReportMessagessModule } from './report-messages/report-messages.module';
+import { ReportMessagesModule } from './report-messages/report-messages.module';
 import { ReportPrioritiesModule } from './report-priorities/report-priorities.module';
 import { ReportSourcesModule } from './report-sources/report-sources.module';
 import { ReportStatusesModule } from './report-statuses/report-statuses.module';
@@ -43,6 +43,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
     ReportSourcesModule,
     ReportCategoriesModule,
     AdminRolesModule,
+    ReportMessagesModule,
   ],
 })
 export class AppModule {}

@@ -16,11 +16,9 @@ lerna-debug.log*
 # Env
 .env
 
-# Databases
-/prisma
+dev.db
+migrations/
 
-# Seed
-seed.ts
 
 # Tests
 /coverage

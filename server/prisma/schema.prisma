@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Admin {
+  id         String        @id @default(uuid())
+  name       String
+  email      String    @unique
+  password   String?
+  is_first_access Boolean @default(true)
+  role_id String
+  role         AdminRole @relation(fields: [role_id], references: [id], onDelete: Cascade)
+  assigned_reports Report[]
+  report_activity_logs ReportActivityLog[]
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+}
+
+model AdminRole {
+  id         String        @id @default(uuid())
+  name      String @unique
+  power_level Int @unique
+  admins Admin[]
+}
+
+model Report {
+  id           String        @id @default(uuid())
+  secret_key      String?    @unique
+  guest_identity        String?
+  guest_email_for_post_box  String?
+  title  String
+  description  String
+  category_id  String
+  category     ReportCategory  @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  status_id  String
+  status     ReportStatus  @relation(fields: [status_id], references: [id], onDelete: Cascade)
+  source_id  String
+  source     ReportSource  @relation(fields: [source_id], references: [id], onDelete: Cascade)
+  assigned_admins Admin[]
+  attachments   ReportAttachment[]
+  tags ReportTag[]
+  priority_id String?
+  priority ReportPriority? @relation(fields: [priority_id], references: [id])
+  messages ReportMessage[]
+  activity_logs ReportActivityLog[]
+  due_date DateTime?
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+}
+
+model ReportTag {
+  id         String        @id @default(uuid())
+  name String @unique
+  reports Report[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model ReportStatus {
+  id         String        @id @default(uuid())
+  name String @unique
+  reports Report[]
+
+}
+
+model ReportPriority {
+  id         String        @id @default(uuid())
+  name String @unique
+  priority_level Int @unique
+  reports   Report[]
+}
+
+model ReportAttachment {
+  id         String        @id @default(uuid())
+  url      String
+  reports Report[]
+}
+
+model ReportMessage {
+  id         String        @id @default(uuid())
+  sent_by String
+  content String
+  report_id   String
+  report      Report     @relation(fields: [report_id], references: [id], onDelete: Cascade)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model ReportCategory {
+  id         String        @id @default(uuid())
+  name      String @unique
+  reports   Report[]
+}
+
+model ReportSource {
+  id         String        @id @default(uuid())
+  name      String @unique
+  reports   Report[]
+}
+
+model ReportActivityLog {
+  id           String        @id @default(uuid())
+  admin_id     String
+  admin        Admin     @relation(fields: [admin_id], references: [id], onDelete: Cascade)
+  report_id    String
+  report       Report    @relation(fields: [report_id], references: [id], onDelete: Cascade)
+  log     String
+  created_at   DateTime  @default(now())
+}
+
+
+
+
+// - guest notifications
+// - add roles control guards to all routes

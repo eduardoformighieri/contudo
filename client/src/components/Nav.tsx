@@ -31,17 +31,6 @@ export const Nav = () => {
             color: 'purple.300',
           }}
           to="/admin">
-          <MdHome size="24px" />
-        </Center>
-        <Center
-          as={Link}
-          color={
-            pathname.startsWith('/admin/reports') ? 'purple.500' : 'gray.100'
-          }
-          _hover={{
-            color: 'purple.300',
-          }}
-          to="/admin/reports">
           <MdSpaceDashboard size="24px" />
         </Center>
         <Center

@@ -1,16 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ReportCategory, ReportMessage } from '@prisma/client';
-import { EncryptionService } from 'src/common/services/encryption.service';
-import { EmailService } from 'src/email/email.service';
+
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class ReportMessagesService {
-  constructor(
-    private prisma: PrismaService,
-    private encryptionService: EncryptionService,
-    private readonly emailService: EmailService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async sendMessage(
     sentBy: string,
@@ -47,12 +42,12 @@ export class ReportMessagesService {
       },
     });
 
-    if (!!report.guest_email_for_post_box) {
-      await this.emailService.sendGuestReportUpdate(
-        this.encryptionService.decrypt(report.guest_email_for_post_box),
-        'An admin sent you a message',
-      );
-    }
+    // if (!!report.guest_email_for_post_box) {
+    //   await this.emailService.sendGuestReportUpdate(
+    //     this.encryptionService.decrypt(report.guest_email_for_post_box),
+    //     'An admin sent you a message',
+    //   );
+    // }
 
     return newMessage[0];
   }

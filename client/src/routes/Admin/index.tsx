@@ -8,10 +8,9 @@ import { ProtectedRoute } from '../../components/ProtectedRoute';
 export const AdminRoutes = () => (
   <Routes>
     <Route element={<ProtectedRoute />}>
-      <Route index element={<Overview />} />
-      <Route path="/reports" element={<Reports />} />
+      <Route index element={<Reports />} />
       <Route path="/manage" element={<Manage />} />
-      <Route path="/reports/:reportId" element={<Report />} />
+      <Route path="/:reportId" element={<Report />} />
     </Route>
   </Routes>
 );

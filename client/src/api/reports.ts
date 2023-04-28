@@ -47,3 +47,8 @@ export const updateStatusyByReportId = async ({
   });
   return data;
 };
+
+export const sendMessage = async (messageInfo: any) => {
+  const { data } = await api.post('/report-messages', messageInfo);
+  return data;
+};

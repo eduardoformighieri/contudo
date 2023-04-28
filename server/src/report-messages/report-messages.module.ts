@@ -1,17 +1,11 @@
 import { Module } from '@nestjs/common';
-import { EncryptionService } from 'src/common/services/encryption.service';
-import { EmailService } from 'src/email/email.service';
-import { ReportsService } from 'src/reports/reports.service';
 
-import { ReportMessagesGateway } from './report-messages.gateway';
+import { ReportMessagesController } from './report-messages.controller';
+import { PrismaService } from 'src/prisma.service';
+import { ReportMessagesService } from './report-messages.service';
 
 @Module({
-  providers: [ReportMessagesGateway, ReportsService],
-  exports: [
-    ReportMessagesGateway,
-    ReportsService,
-    EncryptionService,
-    EmailService,
-  ],
+  controllers: [ReportMessagesController],
+  providers: [ReportMessagesService, PrismaService],
 })
-export class ReportMessagessModule {}
+export class ReportMessagesModule {}

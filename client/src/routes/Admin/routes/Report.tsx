@@ -1,5 +1,17 @@
-import { Flex, Box, Text, Divider, Select, Button } from '@chakra-ui/react';
+import {
+  Flex,
+  Box,
+  Text,
+  Divider,
+  Select,
+  Button,
+  Icon,
+  IconButton,
+  Input,
+} from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import { AiOutlineSend } from 'react-icons/ai';
+import { BiMessageRounded } from 'react-icons/bi';
 import { useMutation, useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import {
@@ -8,11 +20,11 @@ import {
 } from '../../../api/getDataForSelect';
 import {
   getReportById,
+  sendMessage,
   updatePriorityByReportId,
   updateStatusyByReportId,
 } from '../../../api/reports';
 import { Header } from '../../../components/Header';
-import { Messages } from '../../../components/Messages';
 import { Nav } from '../../../components/Nav';
 import { queryClient } from '../../../main';
 import { dateFormatterWithHH } from '../../../utils/dateFormatter';
@@ -62,6 +74,30 @@ export const Report = () => {
     }
   );
 
+  const [inputValue, setInputValue] = useState('');
+
+  const { mutate: mutateSendMessage } = useMutation(
+    () =>
+      sendMessage({
+        content: inputValue,
+        reportId: data.id,
+        sentBy: 'Admin Team',
+      }),
+    {
+      onError: () => {},
+      onSuccess: () => {
+        setInputValue('');
+        queryClient.invalidateQueries(['AdminReport']);
+      },
+    }
+  );
+
+  const handleKeyDown = (event: any) => {
+    if (event.key === 'Enter') {
+      mutateSendMessage();
+    }
+  };
+
   return (
     <Flex bg="black" color={'white'} h={'100vh'}>
       <Nav />
@@ -89,7 +125,100 @@ export const Report = () => {
                 </Box>
               </Flex>
             </Box>
-            <Messages />
+            <Box bg="#121212" borderRadius="8px" h={'460px'} w={'100%'}>
+              <Flex alignItems={'center'} textAlign={'center'} ml={15}>
+                <Icon fontSize={'23px'}>
+                  <BiMessageRounded />
+                </Icon>
+                <Text px={3} py={4}>
+                  Messages
+                </Text>
+              </Flex>
+              <Divider borderColor="gray.100" />
+              <Flex flexDirection="column" gap={8} p={6}>
+                <Box h={'270px'}>
+                  <Flex
+                    h="100%"
+                    flexDirection="column-reverse"
+                    overflowY="auto"
+                    css={{
+                      '&::-webkit-scrollbar': {
+                        display: 'none',
+                      },
+                    }}>
+                    <Flex w="100%" gap={2} flexDirection="column">
+                      {data?.messages.map(
+                        (message: {
+                          id: string;
+                          sent_by: string;
+                          content: string;
+                          report_id: string;
+                          created_at: string;
+                        }) => (
+                          <Box
+                            key={message.id}
+                            ml={message.sent_by !== 'Admin Team' ? 'auto' : 0}
+                            bg={
+                              message.sent_by !== 'Admin Team'
+                                ? '#FFEDE0'
+                                : '#ECEFFE'
+                            }
+                            px={4}
+                            py={4}
+                            maxW="492px"
+                            borderRadius="16px"
+                            borderBottomRightRadius={
+                              message.sent_by !== 'Admin Team' ? 0 : '16px'
+                            }
+                            borderBottomLeftRadius={
+                              message.sent_by !== 'Admin Team' ? '16px' : 0
+                            }>
+                            <Text
+                              whiteSpace="pre-wrap"
+                              color="gray.800"
+                              fontSize={{ base: 'sm', md: 'md' }}>
+                              {message.content}
+                            </Text>
+                            <Text
+                              textAlign="right"
+                              whiteSpace="pre-wrap"
+                              color="gray.500"
+                              fontSize="xs">
+                              {message.sent_by} -{' '}
+                              {dateFormatterWithHH(message.created_at)}
+                            </Text>
+                          </Box>
+                        )
+                      )}
+                    </Flex>
+                  </Flex>
+                </Box>
+                <Flex alignItems={'center'} gap={7}>
+                  <Input
+                    onKeyDown={handleKeyDown}
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    h={'48px'}
+                    size="lg"
+                    w={'90%'}
+                    placeholder="Write a message here"
+                    fontSize={16}
+                  />
+                  <IconButton
+                    onClick={() => mutateSendMessage()}
+                    variant="outline"
+                    color="white"
+                    aria-label=""
+                    size={'lg'}
+                    fontSize={'22px'}
+                    icon={<AiOutlineSend />}
+                    _hover={{
+                      color: 'purple.300',
+                    }}
+                  />
+                </Flex>
+              </Flex>
+            </Box>
           </Flex>
           <Box bg="#121212" borderRadius="8px" h={'830px'} w={'650px'}>
             <Text px={6} py={4}>
