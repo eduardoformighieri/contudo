@@ -1,4 +1,11 @@
 import {
+  HamburgerIcon,
+  AddIcon,
+  ExternalLinkIcon,
+  RepeatIcon,
+  EditIcon,
+} from '@chakra-ui/icons';
+import {
   Box,
   Divider,
   Table,
@@ -16,12 +23,17 @@ import {
   Flex,
   IconButton,
   Spinner,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { MdAdd } from 'react-icons/md';
 import { useQuery } from 'react-query';
 import { getAllAdmins } from '../api/admins';
+import { DeleteAdminModal } from './DeleteAdminModal';
 import { Pagination } from './Pagination';
 
 export const UsersTable = () => {
@@ -103,35 +115,31 @@ export const UsersTable = () => {
                   )}
                 </Td>
                 <Td>
-                  <IconButton
-                    aria-label="Search database"
-                    bg={'#121212'}
-                    icon={<BsThreeDotsVertical />}
-                  />
+                  <Menu>
+                    <MenuButton
+                      as={IconButton}
+                      aria-label="Options"
+                      icon={<BsThreeDotsVertical />}
+                      variant="outline"
+                    />
+                    <MenuList>
+                      <MenuItem icon={<AddIcon />} command="⌘T">
+                        New Tab
+                      </MenuItem>
+                      <MenuItem icon={<ExternalLinkIcon />} command="⌘N">
+                        New Window
+                      </MenuItem>
+                      <MenuItem icon={<RepeatIcon />} command="⌘⇧N">
+                        Open Closed Tab
+                      </MenuItem>
+                      <MenuItem>
+                        <DeleteAdminModal />
+                      </MenuItem>
+                    </MenuList>
+                  </Menu>
                 </Td>
               </Tr>
             ))}
-            <Tr
-              _hover={{
-                background: 'gray.900',
-              }}>
-              <Td>Marco</Td>
-              <Td>
-                <Select placeholder="Select">
-                  <option value="option1">Manager</option>
-                  <option value="option2">Admin</option>
-                  <option value="option3">Lixo</option>
-                </Select>
-              </Td>
-              <Td>Marco</Td>
-              <Td>
-                <IconButton
-                  aria-label="Search database"
-                  bg={'#121212'}
-                  icon={<BsThreeDotsVertical />}
-                />
-              </Td>
-            </Tr>
           </Tbody>
         </Table>
       </TableContainer>
