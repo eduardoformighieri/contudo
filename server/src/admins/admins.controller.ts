@@ -59,7 +59,7 @@ export class AdminsController {
     return this.adminsService.create(createAdminDto);
   }
 
-  @Post()
+  @Post('resend')
   @ApiOperation({ summary: 'Resend First Access email to crated Admin' })
   @UseGuards(RolesGuard)
   @Roles(Role.Leader, Role.Coleader)

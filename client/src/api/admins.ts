@@ -16,3 +16,8 @@ export const deleteAdminById = async (adminId: string) => {
   const { data } = await api.delete(`/admins/admin/${adminId}`);
   return data;
 };
+
+export const createAdmin = async (form: any) => {
+  const { data } = await api.post(`/admins`, form);
+  return data;
+};

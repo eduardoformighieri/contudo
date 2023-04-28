@@ -15,11 +15,68 @@ import {
   Select,
   Stack,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
+import { AxiosError } from 'axios';
+import { useEffect, useState } from 'react';
 import { MdAdd, MdEmail, MdLock, MdPerson } from 'react-icons/md';
+import { useMutation, useQuery } from 'react-query';
+import { createAdmin } from '../api/admins';
+import { getAllAdminRoles } from '../api/getDataForSelect';
+import { queryClient } from '../main';
+import { setToken } from '../utils/tokenStorage';
 
 export const AddAdminModal = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+
+  const [adminRoleId, setAdminRoleId] = useState('');
+
+  const { data: adminRoles } = useQuery<any, Error>(['admin-roles'], () =>
+    getAllAdminRoles()
+  );
+
+  useEffect(() => {
+    if (adminRoles?.length > 0) {
+      setAdminRoleId(adminRoles[0]?.id);
+    }
+  }, [adminRoles]);
+
+  const { mutate } = useMutation(
+    () => createAdmin({ email, name, roleId: adminRoleId }),
+    {
+      onError: (error: AxiosError<{ message: string }>) => {
+        if (error?.response?.data?.message) {
+          toast({
+            title: error.response.data.message,
+            position: 'top-right',
+            isClosable: true,
+            status: 'error',
+          });
+        } else {
+          toast({
+            title: 'Unknown error',
+            position: 'top-right',
+            isClosable: true,
+            status: 'error',
+          });
+        }
+      },
+      onSuccess: (data) => {
+        toast({
+          title: 'Admin created',
+          position: 'top-right',
+          isClosable: true,
+          status: 'success',
+        });
+        onClose();
+        queryClient.invalidateQueries(['adminsTable']);
+      },
+    }
+  );
+
   return (
     <>
       <Button
@@ -50,6 +107,8 @@ export const AddAdminModal = () => {
                     marginTop={'4px'}
                   />
                   <Input
+                    value={name}
+                    onChange={(event: any) => setName(event.target.value)}
                     type="text"
                     h={'48px'}
                     size="lg"
@@ -64,6 +123,8 @@ export const AddAdminModal = () => {
                     marginTop={'4px'}
                   />
                   <Input
+                    value={email}
+                    onChange={(event: any) => setEmail(event.target.value)}
                     type="email"
                     h={'48px'}
                     size="lg"
@@ -71,22 +132,27 @@ export const AddAdminModal = () => {
                     placeholder="Email"
                   />
                 </InputGroup>
+                <Select
+                  w={'350px'}
+                  value={adminRoleId}
+                  onChange={(event: any) => setAdminRoleId(event.target.value)}>
+                  {!!adminRoles &&
+                    adminRoles.map((adminRole: any) => (
+                      <option
+                        key={adminRole.id}
+                        value={adminRole.id}
+                        style={{ background: 'black' }}>
+                        {adminRole.name}
+                      </option>
+                    ))}
+                </Select>
               </Stack>
-              <Select
-                placeholder="Select"
-                h={'48px'}
-                size="lg"
-                w={'350px'}
-                mt={6}>
-                <option value="option1">Manager</option>
-                <option value="option2">Admin</option>
-                <option value="option3">Lixo</option>
-              </Select>
             </Box>
           </ModalBody>
 
           <ModalFooter>
             <Button
+              onClick={() => mutate()}
               bg="#BB86FC"
               size="lg"
               w={'150px'}
@@ -95,7 +161,7 @@ export const AddAdminModal = () => {
               _hover={{
                 background: '#9759e3',
               }}>
-              Save changes
+              Create
             </Button>
           </ModalFooter>
         </ModalContent>
