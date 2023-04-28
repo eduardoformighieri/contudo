@@ -1,16 +1,31 @@
-import { Flex, Box, Center, Text, Divider } from '@chakra-ui/react';
+import { Flex, Box, Center, Text, Divider, Spinner } from '@chakra-ui/react';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 import { getReportBySecretKey } from '../../../api/reports';
 import { Header } from '../../../components/Header';
 import { MessagesEmployee } from '../../../components/MessagesEmployee';
+import { NotFound } from '../../../components/NotFound';
 
 export const Report = () => {
   const { secretKey } = useParams<{ secretKey: string }>();
   const { isLoading, isError, data, error } = useQuery<any, Error>(
     ['service', secretKey],
-    () => getReportBySecretKey(secretKey!)
+    () => getReportBySecretKey(secretKey!),
+    { retry: false }
   );
+
+  if (isLoading) {
+    return (
+      <Center bg={'black'} color="white" h="100vh">
+        <Spinner size="xl" />
+      </Center>
+    );
+  }
+
+  if (isError) {
+    return <NotFound />;
+  }
+
   return (
     <Flex bg={'black'} color={'white'} h={'100vh'} w={'100%'}>
       <Box w={'100%'}>

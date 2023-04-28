@@ -33,8 +33,10 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import { MdAdd } from 'react-icons/md';
 import { useQuery } from 'react-query';
 import { getAllAdmins } from '../api/admins';
+import { AddAdminModal } from './AddAdminModal';
 import { DeleteAdminModal } from './DeleteAdminModal';
 import { Pagination } from './Pagination';
+import { UpdateAdminModal } from './UpdateAdminModal';
 
 export const UsersTable = () => {
   const [page, setPage] = useState(1);
@@ -74,17 +76,7 @@ export const UsersTable = () => {
           Users
         </Text>
         <Flex gap={5} mr={5}>
-          <Button
-            leftIcon={<MdAdd />}
-            size="md"
-            w={'120px'}
-            bg="purple.300"
-            variant="solid"
-            _hover={{
-              background: '#9759e3',
-            }}>
-            Add user
-          </Button>
+          <AddAdminModal />
         </Flex>
       </Flex>
       <Divider borderColor="gray.100" />
@@ -120,19 +112,13 @@ export const UsersTable = () => {
                       as={IconButton}
                       aria-label="Options"
                       icon={<BsThreeDotsVertical />}
-                      variant="outline"
+                      variant="unstyled"
                     />
-                    <MenuList>
-                      <MenuItem icon={<AddIcon />} command="⌘T">
-                        New Tab
+                    <MenuList bg="#121212">
+                      <MenuItem _hover={{ bg: '#404040' }} bg="#121212">
+                        <UpdateAdminModal />
                       </MenuItem>
-                      <MenuItem icon={<ExternalLinkIcon />} command="⌘N">
-                        New Window
-                      </MenuItem>
-                      <MenuItem icon={<RepeatIcon />} command="⌘⇧N">
-                        Open Closed Tab
-                      </MenuItem>
-                      <MenuItem>
+                      <MenuItem _hover={{ bg: '#404040' }} bg="#121212">
                         <DeleteAdminModal />
                       </MenuItem>
                     </MenuList>
